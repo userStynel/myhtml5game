@@ -50,16 +50,20 @@
     }
 
 
-    function sex()
+    function dialogue(name)
     {
-        alert("Hi! I'm Vender, Do you interested in my stuff?");
-    }
+        var rand = Math.floor(Math.random()*2);
+        if(name == "vendor")
+            alert("Hi! I'm Vender, Do you interested in my stuff?");
+        else if(name == "rabbit")
+        {
+            if(rand == 0)
+                alert("Hi I'm taking Rabbit! from weird world!");
+            else if(rand == 1)
+                alert("Why you talking to me? but I love you!");
+        }
 
-    function sex2()
-    {
-        alert("Hi! I'm talking RABBIT");
     }
-
     function preload ()
     {
         LoadImages(this);
@@ -77,9 +81,9 @@
         this.player.direction = "left";
         this.player.setBounce(0.2);
         this.char2.setInteractive();
-        this.char2.on('pointerdown', sex);
+        this.char2.on('pointerdown', function(){dialogue("vendor")});
         this.rabbit.setInteractive();
-        this.rabbit.on('pointerdown', sex2);
+        this.rabbit.on('pointerdown', function(){dialogue("rabbit")});
         this.char2.setCollideWorldBounds(true); 
         this.char2.anims.play('idle2_left', true);
         this.player.setCollideWorldBounds(true); 
