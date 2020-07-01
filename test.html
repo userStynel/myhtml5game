@@ -71,12 +71,16 @@
 
     function create ()
     {
+        const map = this.make.tilemap({key: 'map'});
+        const st = mappy.addTilesetImage('map', 'tiles');
+       // this.mappy.createStaticLayer('Ground', st);
         this.keys = this.input.keyboard.addKeys('A, D, W, S, SPACE');
         this.bulletGroup = new BulletGroup(this);
         this.rabbit = this.physics.add.sprite(200, 0, 'rabbit');
         this.player = this.physics.add.sprite(0, 0, 'idle_pic');
         this.char2 = this.physics.add.sprite(300, 0, 'character2');
-        this.monster = this.physics.add.sprite(500, 0, 'greenmonster');
+        this.greenmonster = this.physics.add.sprite(500, 0, 'greenmonster');
+        this.redmonster = this.physics.add.sprite(700, 0, 'redmonster');
         this.stateMachine = new StateMachine('idle', {idle: new IdleState(), move: new MoveState(), swing: new SwingState(),}, [this, this.player]);
         LoadAnimation(this);
         this.player.direction = "left";
@@ -91,7 +95,8 @@
         this.player.anims.play('idle_left', true);  
         this.rabbit.setCollideWorldBounds(true);
         this.rabbit.anims.play('rabbit_idle', true);  
-        this.monster.setCollideWorldBounds(true); 
+        this.greenmonster.setCollideWorldBounds(true); 
+        this.redmonster.setCollideWorldBounds(true);
         //this.physics.add.collider(player, rabbit);
     }
 

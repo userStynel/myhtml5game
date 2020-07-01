@@ -5,7 +5,10 @@ function LoadImages(scene)
     scene.load.spritesheet('attacking_pic', './assets/as_attacking.png', {frameWidth: 128, frameHeight: 128});
     scene.load.spritesheet('character2', './assets/character2.png', {frameWidth: 128, frameHeight: 128});
     scene.load.image('shuriken', './assets/shuriken.png');
-    scene.load.image('greenmonster','./assets/monster.png');
+    scene.load.image('greenmonster','./assets/MONSTER/green_monster.png');
+    scene.load.image('redmonster', './assets/MONSTER/red_monster.png');
+    scene.load.image('tiles', './assets/tile/stone_tile.png');
+    scene.load.tilemapTiledJSON('map', './assets/tile/map.json');
 }
 
 function LoadAnimation(scene)
