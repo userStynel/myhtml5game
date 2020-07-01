@@ -58,9 +58,9 @@
         else if(name == "rabbit")
         {
             if(rand == 0)
-                alert("Hi I'm taking Giant Rabbit! from weird world!");
+                alert("Hi I'm taking Giant Rabbit from weird world!");
             else if(rand == 1)
-                alert("Why you talking to me? but I love you!");
+                alert("I love you so Much!");
         }
 
     }
@@ -71,14 +71,13 @@
 
     function create ()
     {
-        const level = [[0, 0, 0, 0, 0], [0, 0, 0, 0, 0], [1, 1, 1, 1, 1], [0, 0, 0, 0, 0], [1, 1, 1, 1, 1], [1, 1, 1, 1, 1]];
         const map = this.make.tilemap({key: 'map', tileWidth:64, tileHeight:64});
         const st = map.addTilesetImage("tiles");
         map.createStaticLayer(0, st);
         this.keys = this.input.keyboard.addKeys('A, D, W, S, SPACE');
         this.bulletGroup = new BulletGroup(this);
         this.rabbit = this.physics.add.sprite(256,256, 'rabbit');
-        this.player = this.physics.add.sprite(0, 0, 'idle_pic');
+        this.player = this.physics.add.sprite(128, 256, 'idle_pic');
         this.char2 = this.physics.add.sprite(128, 128, 'character2');
         this.greenmonster = this.physics.add.sprite(512, 128, 'greenmonster');
         this.redmonster = this.physics.add.sprite(512, 512, 'redmonster');
