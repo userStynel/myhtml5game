@@ -76,6 +76,7 @@
         this.rabbit = this.physics.add.sprite(200, 0, 'rabbit');
         this.player = this.physics.add.sprite(0, 0, 'idle_pic');
         this.char2 = this.physics.add.sprite(300, 0, 'character2');
+        this.monster = this.physics.add.sprite(500, 0, 'greenmonster');
         this.stateMachine = new StateMachine('idle', {idle: new IdleState(), move: new MoveState(), swing: new SwingState(),}, [this, this.player]);
         LoadAnimation(this);
         this.player.direction = "left";
@@ -89,7 +90,8 @@
         this.player.setCollideWorldBounds(true); 
         this.player.anims.play('idle_left', true);  
         this.rabbit.setCollideWorldBounds(true);
-        this.rabbit.anims.play('rabbit_idle', true);   
+        this.rabbit.anims.play('rabbit_idle', true);  
+        this.monster.setCollideWorldBounds(true); 
         //this.physics.add.collider(player, rabbit);
     }
 

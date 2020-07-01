@@ -5,6 +5,7 @@ function LoadImages(scene)
     scene.load.spritesheet('attacking_pic', './assets/as_attacking.png', {frameWidth: 128, frameHeight: 128});
     scene.load.spritesheet('character2', './assets/character2.png', {frameWidth: 128, frameHeight: 128});
     scene.load.image('shuriken', './assets/shuriken.png');
+    scene.load.image('greenmonster','./assets/monster.png');
 }
 
 function LoadAnimation(scene)
