@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="./phaser-3.23.0/dist/phaser-arcade-physics.min.js"></script>
+</head>
+<body>
+    <script src="./scripts/character.js"></script>
+    <script src="./scripts/statemachine.js"></script>
+    <script>
+    var config = {
+        type: Phaser.AUTO,
+        width: 800,
+        height: 600,
+        physics: {
+            default: 'arcade',
+            arcade: {
+                gravity: { y: 200 }
+            }
+        },
+        scene: {
+            preload: preload,
+            create: create,
+            update: update
+        }
+    };
+
+    var game = new Phaser.Game(config);
+
+    class BulletGroup extends Phaser.Physics.Arcade.Group
+    {
+        constructor(scene)
+        {
+            super(scene.physics.world, scene);
+            this.createMultiple({
+            classType: Bullet,
+            frameQuantity: 30,
+            active: false,
+            visible: false,
+            key: 'laser'
+            })
+        }
+    }
+
+    class Bullet extends Phaser.Physics.Arcade.Sprite
+    {
+        constructor(scene, x, y)
+        {
+            super(scene, x, y, 'shuriken');
+        }
+    }
+
+
+    function sex()
+    {
+        alert("Hi! I'm Vender, Do you interested in my stuff?");
+    }
+
+    function sex2()
+    {
+        alert("Hi! I'm talking RABBIT");
+    }
+
+    function preload ()
+    {
+        LoadImages(this);
+    }
+
+    function create ()
+    {
+        this.keys = this.input.keyboard.addKeys('A, D, W, S, SPACE');
+        this.bulletGroup = new BulletGroup(this);
+        this.rabbit = this.physics.add.sprite(200, 0, 'rabbit');
+        this.player = this.physics.add.sprite(0, 0, 'idle_pic');
+        this.char2 = this.physics.add.sprite(300, 0, 'character2');
+        this.stateMachine = new StateMachine('idle', {idle: new IdleState(), move: new MoveState(), swing: new SwingState(),}, [this, this.player]);
+        LoadAnimation(this);
+        this.player.direction = "left";
+        this.player.setBounce(0.2);
+        this.char2.setInteractive();
+        this.char2.on('pointerdown', sex);
+        this.rabbit.setInteractive();
+        this.rabbit.on('pointerdown', sex2);
+        this.char2.setCollideWorldBounds(true); 
+        this.char2.anims.play('idle2_left', true);
+        this.player.setCollideWorldBounds(true); 
+        this.player.anims.play('idle_left', true);  
+        this.rabbit.setCollideWorldBounds(true);
+        this.rabbit.anims.play('rabbit_idle', true);   
+        //this.physics.add.collider(player, rabbit);
+    }
+
+    function update()
+    {
+        this.stateMachine.step();
+    }
+    </script>
+
+</body>
+</html>
