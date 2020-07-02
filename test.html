@@ -78,12 +78,13 @@
         this.bulletGroup = new BulletGroup(this);
         this.rabbit = this.physics.add.sprite(256,256, 'rabbit');
         this.player = this.physics.add.sprite(128, 256, 'idle_pic');
+        this.player.direction = "down";
         this.char2 = this.physics.add.sprite(128, 128, 'character2');
         this.greenmonster = this.physics.add.sprite(512, 128, 'greenmonster');
         this.redmonster = this.physics.add.sprite(512, 512, 'redmonster');
         this.stateMachine = new StateMachine('idle', {idle: new IdleState(), move: new MoveState(), swing: new SwingState(),}, [this, this.player]);
         LoadAnimation(this);
-        this.player.direction = "left";
+        this.player.direction = "down";
         this.player.setBounce(0.2);
         this.char2.setInteractive();
         this.char2.on('pointerdown', function(){dialogue("vendor")});
@@ -92,7 +93,7 @@
         this.char2.setCollideWorldBounds(true); 
         this.char2.anims.play('idle2_left', true);
         this.player.setCollideWorldBounds(true); 
-        this.player.anims.play('idle_left', true);  
+        this.player.anims.play('idle-'+this.player.direction, true);  
         this.rabbit.setCollideWorldBounds(true);
         this.rabbit.anims.play('rabbit_idle', true);  
         this.greenmonster.setCollideWorldBounds(true); 

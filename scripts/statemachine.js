@@ -53,7 +53,7 @@ class StateMachine
                 this.stateMachine.transistion('swing');
                 return;
             }
-            hero.anims.play('idle_'+hero.direction, true);
+            hero.anims.play('idle-'+hero.direction, true);
         }
     }
 
@@ -74,22 +74,30 @@ class StateMachine
             if(scene.keys.A.isDown)
             {
                 hero.setVelocityX(-100);
-                hero.direction = "left"
+                //hero.direction = "left"
             }
             if(scene.keys.D.isDown)
             {
                 hero.setVelocityX(100);
-                hero.direction = "right"
+                //hero.direction = "right"
+                hero.anims.play('walking-right', true);
+                return;
             }
             if(scene.keys.W.isDown)
             {
                 hero.setVelocityY(-300);
+                hero.direction = "up";
+                hero.anims.play('walking-'+hero.direction, true);
+                return;
             }
             if(scene.keys.S.isDown)
             {
                 hero.setVelocityY(300);
+                hero.direction = "down";
+                hero.anims.play('walking-'+hero.direction, true);
+                return;
             }
-            hero.anims.play('idle_'+hero.direction, true);
+           hero.anims.play('idle-'+hero.direction, true);
         }
     }
 

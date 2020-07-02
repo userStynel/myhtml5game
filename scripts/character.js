@@ -1,7 +1,7 @@
 function LoadImages(scene)
 {
 	scene.load.spritesheet('rabbit', './assets/rabbit.png',  { frameWidth: 128, frameHeight: 128});
-    scene.load.spritesheet('idle_pic', './assets/as.png', { frameWidth: 64, frameHeight: 64});
+    scene.load.spritesheet('character_anim', './assets/as.png', { frameWidth: 64, frameHeight: 64});
     scene.load.spritesheet('attacking_pic', './assets/as_attacking.png', {frameWidth: 64, frameHeight: 64});
     scene.load.spritesheet('character2', './assets/character2.png', {frameWidth: 64, frameHeight: 64});
     scene.load.image('shuriken', './assets/shuriken.png');
@@ -13,15 +13,33 @@ function LoadImages(scene)
 
 function LoadAnimation(scene)
 {
-	 scene.anims.create({
-        key: 'idle_left',
-        frames: scene.anims.generateFrameNumbers('idle_pic', { start: 0, end: 4 }),
+	scene.anims.create({
+        key: 'idle-down',
+        frames: scene.anims.generateFrameNumbers('character_anim', { start: 0, end: 1 }),
+        frameRate: 3,
+        repeat: -1
+        });
+    scene.anims.create({
+        key: 'idle-up',
+        frames: scene.anims.generateFrameNumbers('character_anim', { start: 11, end: 12}),
+        frameRate: 3,
+        repeat: -1
+        });
+    scene.anims.create({
+        key: 'walking-down',
+        frames: scene.anims.generateFrameNumbers('character_anim', { start: 2, end: 6 }),
         frameRate: 10,
         repeat: -1
         });
     scene.anims.create({
-        key: 'idle_right',
-        frames: scene.anims.generateFrameNumbers('idle_pic', { start: 5, end: 9}),
+        key: 'walking-up',
+        frames: scene.anims.generateFrameNumbers('character_anim', { start: 7, end: 11 }),
+        frameRate: 10,
+        repeat: -1
+        });
+    scene.anims.create({
+        key: 'walking-right',
+        frames: scene.anims.generateFrameNumbers('character_anim', { start: 13, end: 14 }),
         frameRate: 10,
         repeat: -1
         });
