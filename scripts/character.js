@@ -26,6 +26,18 @@ function LoadAnimation(scene)
         repeat: -1
         });
     scene.anims.create({
+        key: 'idle-right',
+        frames: scene.anims.generateFrameNumbers('character_anim', { start: 17, end: 18}),
+        frameRate: 3,
+        repeat: -1
+        });
+    scene.anims.create({
+        key: 'idle-left',
+        frames: scene.anims.generateFrameNumbers('character_anim', { start: 19, end: 20}),
+        frameRate: 3,
+        repeat: -1
+        });
+    scene.anims.create({
         key: 'walking-down',
         frames: scene.anims.generateFrameNumbers('character_anim', { start: 2, end: 6 }),
         frameRate: 10,
@@ -40,6 +52,12 @@ function LoadAnimation(scene)
     scene.anims.create({
         key: 'walking-right',
         frames: scene.anims.generateFrameNumbers('character_anim', { start: 13, end: 14 }),
+        frameRate: 10,
+        repeat: -1
+        });
+    scene.anims.create({
+        key: 'walking-left',
+        frames: scene.anims.generateFrameNumbers('character_anim', { start: 15, end: 16 }),
         frameRate: 10,
         repeat: -1
         });
@@ -67,4 +85,15 @@ function LoadAnimation(scene)
         frameRate: 5,
         repeat: -1
         });
+}
+
+
+class Monster extends Phaser.Physics.Arcade.Sprite
+{
+    constructor(scene, x, y)
+    {
+        this.x = x;
+        this.y = y;
+        super(scene, x, y);
+    }
 }
