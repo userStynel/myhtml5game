@@ -1,5 +1,6 @@
 function LoadImages(scene)
 {
+	scene.load.setBaseURL('https://raw.githubusercontent.com/userStynel/myhtml5game/single');
 	scene.load.spritesheet('rabbit', './assets/rabbit.png',  { frameWidth: 128, frameHeight: 128});
     scene.load.spritesheet('character_anim', './assets/as.png', { frameWidth: 64, frameHeight: 64});
     scene.load.spritesheet('attacking_pic', './assets/as_attacking.png', {frameWidth: 64, frameHeight: 64});
