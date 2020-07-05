@@ -99,8 +99,47 @@ class StateMachine
     {
         enter(scene, hero)
         {
+			var HitBox;
+			var collider;
+			var x, y, height, width;
             hero.setVelocityX(0);
             hero.anims.play('attack_'+hero.direction);
+			if(hero.direction == 'left')
+			{
+				x = hero.x-30;
+				y = hero.y-10;
+				height = 84;
+				width = 30;
+			}
+			else if(hero.direction == 'right')
+			{
+				x = hero.x+64;
+				y = hero.y-10;
+				height = 84;
+				width = 30;
+			}
+			else if(hero.direction == 'up')
+			{
+				x = hero.x-10;
+				y = hero.y-30;
+				height = 30;
+				width = 84;
+			}
+			else if(hero.direction == 'down')
+			{
+				x = hero.x-10;
+				y = hero.y+64;
+				height = 30;
+				width = 84;
+			}
+			HitBox = scene.physics.add.sprite(x,y, null);
+			HitBox.height =height;
+			HitBox.width = width;
+			if(scene.physics.world.collide(HitBox, scene.greenmonster))
+				alert('true!');
+			else
+				alert('false');
+			HitBox.destroy();
             hero.once('animationcomplete', () => {this.stateMachine.transistion('idle');});
         }
     }
