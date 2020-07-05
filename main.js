@@ -1,11 +1,88 @@
 var http = require('http');
+var url = require('url');
 var fs = require('fs');
 
-function onRequest(request, response)
-{
-	if(request.method == 'GET' && request.url == '/'){ response.writeHead(200,{"Content-Type":"text/html"});												  fs.createReadStream("./test.html").pipe(response);
-													 }
-}
+var mime = require('mime');
 
-http.createServer(onRequest).listen(3000);
-console.log("running");
+var server = http.createServer(function(request, response){
+	var parsedUrl = url.parse(request.url);
+	var resource = parsedUrl.pathname;
+	
+	if(resource == '/')
+	{
+		fs.readFile('test.html', function(error, data){
+			if(error)
+			{
+				response.writeHead(500, {'Content-Type':'text/html'});
+				response.end('500 Internal Server ' + error);
+			}
+			else
+			{
+				response.writeHead(200, {'Content-Type':'text/html'});
+				response.end(data);
+			}
+		});
+	}
+	else if(resource.indexOf('/assets/') == 0)
+	{
+		var imgPath = resource.substring(1);
+		console.log('imgPath= ' + imgPath);
+		var imgMime = mime.getType(imgPath);
+		console.log('mime= ' + imgMime);
+		
+		fs.readFile(imgPath, function(error, data){
+			if(error)
+			{
+				response.writeHead(500, {'Content-Type':'text/html'});
+				response.end('500 Internal Server ' + error);
+			}
+			else
+			{
+				response.writeHead(200, {'Content-Type':imgMime});
+				response.end(data);
+			}
+		});
+	}
+	else if(resource.indexOf('/phaser-3.23.0/') == 0)
+	{
+		var scriptPath = resource.substring(1);
+		console.log('scriptPath= ' + scriptPath);
+		var scriptMime = mime.getType(scriptPath);
+		console.log('mime= ' + scriptMime);
+		
+		fs.readFile(scriptPath, function(error, data){
+			if(error)
+			{
+				response.writeHead(500, {'Content-Type':'text/html'});
+				response.end('500 Internal Server ' + error);
+			}
+			else
+			{
+				response.writeHead(200, {'Content-Type':scriptMime});
+				response.end(data);
+			}
+		});
+	}
+	else if(resource.indexOf('/scripts/') == 0)
+	{
+		var scriptPath = resource.substring(1);
+		console.log('scriptPath= ' + scriptPath);
+		var scriptMime = mime.getType(scriptPath);
+		console.log('mime= ' + scriptMime);
+		
+		fs.readFile(scriptPath, function(error, data){
+			if(error)
+			{
+				response.writeHead(500, {'Content-Type':'text/html'});
+				response.end('500 Internal Server ' + error);
+			}
+			else
+			{
+				response.writeHead(200, {'Content-Type':scriptMime});
+				response.end(data);
+			}
+		});
+	}
+});
+
+server.listen(3000, function(){console.log('Running...')});
