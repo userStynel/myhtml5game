@@ -71,17 +71,17 @@
 
     function create ()
     {
+		this.monsterlist = new Array();
         const map = this.make.tilemap({key: 'map', tileWidth:64, tileHeight:64});
         const st = map.addTilesetImage("tiles");
         map.createStaticLayer(0, st);
         this.keys = this.input.keyboard.addKeys('A, D, W, S, SPACE');
-        this.bulletGroup = new BulletGroup(this);
         this.rabbit = this.physics.add.sprite(256,256, 'rabbit');
         this.player = this.physics.add.sprite(128, 256, 'idle_pic');
         this.player.direction = "down";
         this.char2 = this.physics.add.sprite(128, 128, 'character2');
-        this.greenmonster = this.physics.add.sprite(512, 128, 'greenmonster');
-        this.redmonster = this.physics.add.sprite(512, 512, 'redmonster');
+        //this.greenmonster = this.physics.add.sprite(512, 128, 'greenmonster');
+        //this.redmonster = this.physics.add.sprite(512, 512, 'redmonster');
         this.stateMachine = new StateMachine('idle', {idle: new IdleState(), move: new MoveState(), swing: new SwingState(),}, [this, this.player]);
         LoadAnimation(this);
         this.player.direction = "down";
@@ -96,9 +96,9 @@
         this.player.anims.play('idle-'+this.player.direction, true);  
         this.rabbit.setCollideWorldBounds(true);
         this.rabbit.anims.play('rabbit_idle', true);  
-        this.greenmonster.setCollideWorldBounds(true); 
-        this.redmonster.setCollideWorldBounds(true);
-        //this.physics.add.collider(player, rabbit);
+        //this.greenmonster.setCollideWorldBounds(true); 
+        //this.redmonster.setCollideWorldBounds(true);
+		add_Monster(this.monsterlist, this);
     }
 
     function update()

@@ -135,10 +135,13 @@ class StateMachine
 			HitBox = scene.physics.add.sprite(x,y, null);
 			HitBox.height =height;
 			HitBox.width = width;
-			if(scene.physics.world.collide(HitBox, scene.greenmonster))
+			for(var i = 0; i<scene.monsterlist.length; i++)
+			{
+			if(scene.physics.world.collide(HitBox, scene.monsterlist[i]))
 				alert('true!');
 			else
 				alert('false');
+			}
 			HitBox.destroy();
             hero.once('animationcomplete', () => {this.stateMachine.transistion('idle');});
         }

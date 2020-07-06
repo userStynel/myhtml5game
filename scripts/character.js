@@ -89,12 +89,8 @@ function LoadAnimation(scene)
 }
 
 
-class Monster extends Phaser.Physics.Arcade.Sprite
+function add_Monster(Monlist, scene)
 {
-    constructor(scene, x, y)
-    {
-        this.x = x;
-        this.y = y;
-        super(scene, x, y);
-    }
+	Monlist.push(scene.physics.add.sprite(10,10, 'greenmonster'));
+	Monlist.push(scene.physics.add.sprite(500,500, 'greenmonster'));
 }
