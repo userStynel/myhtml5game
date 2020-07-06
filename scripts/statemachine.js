@@ -138,9 +138,10 @@ class StateMachine
 			for(var i = 0; i<scene.monsterlist.length; i++)
 			{
 			if(scene.physics.world.collide(HitBox, scene.monsterlist[i]))
-				alert('true!');
-			else
-				alert('false');
+				{
+					alert(i);
+					scene.monsterlist[i].destroy();
+				}
 			}
 			HitBox.destroy();
             hero.once('animationcomplete', () => {this.stateMachine.transistion('idle');});

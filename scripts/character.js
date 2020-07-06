@@ -91,6 +91,9 @@ function LoadAnimation(scene)
 
 function add_Monster(Monlist, scene)
 {
-	Monlist.push(scene.physics.add.sprite(10,10, 'greenmonster'));
-	Monlist.push(scene.physics.add.sprite(500,500, 'greenmonster'));
+	for(var i = 0; i<7; i++)
+	{
+		Monlist.push(scene.physics.add.sprite(100*i,100*i, 'greenmonster'));
+	}
+	
 }
