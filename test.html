@@ -26,30 +26,6 @@
 
     var game = new Phaser.Game(config);
 
-    class BulletGroup extends Phaser.Physics.Arcade.Group
-    {
-        constructor(scene)
-        {
-            super(scene.physics.world, scene);
-            this.createMultiple({
-            classType: Bullet,
-            frameQuantity: 30,
-            active: false,
-            visible: false,
-            key: 'laser'
-            })
-        }
-    }
-
-    class Bullet extends Phaser.Physics.Arcade.Sprite
-    {
-        constructor(scene, x, y)
-        {
-            super(scene, x, y, 'shuriken');
-        }
-    }
-
-
     function dialogue(name)
     {
         var rand = Math.floor(Math.random()*2);
@@ -64,6 +40,7 @@
         }
 
     }
+	
     function preload ()
     {
         LoadImages(this);
@@ -71,34 +48,15 @@
 
     function create ()
     {
-		this.monsterlist = new Array();
-        const map = this.make.tilemap({key: 'map', tileWidth:64, tileHeight:64});
-        const st = map.addTilesetImage("tiles");
-        map.createStaticLayer(0, st);
+		LoadAnimation(this);
+		addObjects(this);
         this.keys = this.input.keyboard.addKeys('A, D, W, S, SPACE');
-        this.rabbit = this.physics.add.sprite(256,256, 'rabbit');
-        this.player = this.physics.add.sprite(128, 256, 'idle_pic');
-        this.player.direction = "down";
-        this.char2 = this.physics.add.sprite(128, 128, 'character2');
-        //this.greenmonster = this.physics.add.sprite(512, 128, 'greenmonster');
-        //this.redmonster = this.physics.add.sprite(512, 512, 'redmonster');
         this.stateMachine = new StateMachine('idle', {idle: new IdleState(), move: new MoveState(), swing: new SwingState(),}, [this, this.player]);
-        LoadAnimation(this);
-        this.player.direction = "down";
         this.player.setBounce(0.2);
-        this.char2.setInteractive();
-        this.char2.on('pointerdown', function(){dialogue("vendor")});
-        this.rabbit.setInteractive();
-        this.rabbit.on('pointerdown', function(){dialogue("rabbit")});
-        this.char2.setCollideWorldBounds(true); 
-        this.char2.anims.play('idle2_left', true);
+        this.NPClist[1].anims.play('idle2_left', true);
         this.player.setCollideWorldBounds(true); 
         this.player.anims.play('idle-'+this.player.direction, true);  
-        this.rabbit.setCollideWorldBounds(true);
-        this.rabbit.anims.play('rabbit_idle', true);  
-        //this.greenmonster.setCollideWorldBounds(true); 
-        //this.redmonster.setCollideWorldBounds(true);
-		add_Monster(this.monsterlist, this);
+        this.NPClist[0].anims.play('rabbit_idle', true);
     }
 
     function update()
@@ -106,6 +64,5 @@
         this.stateMachine.step();
     }
     </script>
-
 </body>
 </html>

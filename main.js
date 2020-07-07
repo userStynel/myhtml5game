@@ -1,7 +1,6 @@
 var http = require('http');
 var url = require('url');
 var fs = require('fs');
-
 var mime = require('mime');
 
 var server = http.createServer(function(request, response){
@@ -85,4 +84,4 @@ var server = http.createServer(function(request, response){
 	}
 });
 
-server.listen(3000, function(){console.log('aRunning...')});
+server.listen(3000, function(){console.log('Server is running...')});
