@@ -139,7 +139,7 @@ class StateMachine
 			{
 			if(scene.physics.world.collide(HitBox, scene.monsterlist[i]))
 				{
-					alert(i);
+					//alert(i);
 					scene.monsterlist[i].destroy();
 				}
 			}
