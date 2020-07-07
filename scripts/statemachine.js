@@ -103,7 +103,6 @@ class StateMachine
 			var collider;
 			var x, y, height, width;
             hero.setVelocityX(0);
-            hero.anims.play('attack_'+hero.direction);
 			if(hero.direction == 'left')
 			{
 				x = hero.x-30;
@@ -132,6 +131,7 @@ class StateMachine
 				height = 30;
 				width = 84;
 			}
+			hero.anims.play('attack_'+hero.direction);
 			HitBox = scene.physics.add.sprite(x,y, null);
 			HitBox.height =height;
 			HitBox.width = width;

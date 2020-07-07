@@ -62,16 +62,28 @@ function LoadAnimation(scene)
         frameRate: 10,
         repeat: -1
         });
+	scene.anims.create({
+        key: 'attack_up',
+        frames: scene.anims.generateFrameNumbers('attacking_pic', { start: 5, end: 9}),
+        frameRate: 11,
+        repeat: 0
+        });
+	scene.anims.create({
+        key: 'attack_down',
+        frames: scene.anims.generateFrameNumbers('attacking_pic', { start: 0, end: 4 }),
+        frameRate: 11,
+        repeat: 0
+        });
     scene.anims.create({
         key: 'attack_left',
-        frames: scene.anims.generateFrameNumbers('attacking_pic', { start: 0, end: 1 }),
-        frameRate: 5,
+        frames: scene.anims.generateFrameNumbers('attacking_pic', { start: 0, end: 4 }),
+        frameRate: 11,
         repeat: 0
         });
     scene.anims.create({
         key: 'attack_right',
-        frames: scene.anims.generateFrameNumbers('attacking_pic', { start: 2, end: 3 }),
-        frameRate: 5,
+        frames: scene.anims.generateFrameNumbers('attacking_pic', { start: 0, end: 4 }),
+        frameRate: 11,
         repeat: 0
         });
     scene.anims.create({
