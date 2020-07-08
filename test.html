@@ -41,6 +41,13 @@
 
     }
 	
+	function Monster(x, y, scene)
+	{
+		this.body = scene.physics.add.sprite(x,y, 'greenmonster');
+		this.health = 100;
+		this.minusHealth = function(){this.health -= 10;}
+	}
+		
     function preload ()
     {
         LoadImages(this);

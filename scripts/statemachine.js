@@ -137,10 +137,12 @@ class StateMachine
 			HitBox.width = width;
 			for(var i = 0; i<scene.monsterlist.length; i++)
 			{
-			if(scene.physics.world.collide(HitBox, scene.monsterlist[i]))
+			if(scene.physics.world.collide(HitBox, scene.monsterlist[i].body))
 				{
-					//alert(i);
-					scene.monsterlist[i].destroy();
+					scene.monsterlist[i].minusHealth();
+					alert("Hit Test: Monster " + i + " health: " + scene.monsterlist[i].health);
+					if(scene.monsterlist[i].health == 0)
+						scene.monsterlist[i].body.destroy();
 				}
 			}
 			HitBox.destroy();

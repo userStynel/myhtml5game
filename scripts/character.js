@@ -114,7 +114,7 @@ function addMonster(Monlist, scene)
 {
 	for(var i = 0; i<7; i++)
 	{
-		Monlist.push(scene.physics.add.sprite(100*i,100*i, 'greenmonster'));
+		Monlist.push(new Monster(100*i, 100*i, scene));
 	}
 	
 }
