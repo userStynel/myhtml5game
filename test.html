@@ -44,6 +44,8 @@
 	function Monster(x, y, scene)
 	{
 		this.body = scene.physics.add.sprite(x,y, 'greenmonster');
+		this.body.setCollideWorldBounds(true); 
+		this.body.anims.play('greenmonster-idle', true);
 		this.health = 100;
 		this.minusHealth = function(){this.health -= 10;}
 	}
