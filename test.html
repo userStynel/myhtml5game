@@ -9,8 +9,8 @@
     <script>
     var config = {
         type: Phaser.AUTO,
-        width: 960,
-        height: 960,
+        width: 1320,
+        height: 1320,
         physics: {
             default: 'arcade',
             arcade: {
@@ -47,6 +47,7 @@
 		this.body.setCollideWorldBounds(true); 
 		this.body.anims.play('greenmonster-idle', true);
 		this.health = 100;
+		this.status = 1;
 		this.minusHealth = function(){this.health -= 10;}
 	}
 		
@@ -62,7 +63,8 @@
         this.keys = this.input.keyboard.addKeys('A, D, W, S, SPACE');
         this.stateMachine = new StateMachine('idle', {idle: new IdleState(), move: new MoveState(), swing: new SwingState(),}, [this, this.player]);
         this.player.setBounce(0.2);
-        this.NPClist[1].anims.play('idle2_left', true);
+		this.player.scale;
+		this.NPClist[1].anims.play('idle2_left', true);
         this.player.setCollideWorldBounds(true); 
         this.player.anims.play('idle-'+this.player.direction, true);  
         this.NPClist[0].anims.play('rabbit_idle', true);

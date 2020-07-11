@@ -73,22 +73,22 @@ class StateMachine
             }
             if(scene.keys.A.isDown)
             {
-                hero.setVelocityX(-100);
+                hero.setVelocityX(-50);
                 hero.direction = "left"
             }
             if(scene.keys.D.isDown)
             {
-                hero.setVelocityX(100);
+                hero.setVelocityX(50);
                 hero.direction = "right"
             }
             if(scene.keys.W.isDown)
             {
-                hero.setVelocityY(-300);
+                hero.setVelocityY(-50);
                 hero.direction = "up";
             }
             if(scene.keys.S.isDown)
             {
-                hero.setVelocityY(300);
+                hero.setVelocityY(50);
                 hero.direction = "down";
             }
            hero.anims.play('walking-'+hero.direction, true);
@@ -105,31 +105,31 @@ class StateMachine
             hero.setVelocityX(0);
 			if(hero.direction == 'left')
 			{
-				x = hero.x-30;
-				y = hero.y-10;
-				height = 84;
-				width = 30;
+				height = 64;
+				width = 3;
+				x = hero.x;
+				y = hero.y-((height-hero.height)/2);
 			}
 			else if(hero.direction == 'right')
 			{
-				x = hero.x+64;
-				y = hero.y-10;
-				height = 84;
-				width = 30;
+				height = 64;
+				width = 3;
+				x = hero.x+hero.width;
+				y = hero.y-((height-hero.height)/2);
 			}
 			else if(hero.direction == 'up')
 			{
-				x = hero.x-10;
-				y = hero.y-30;
-				height = 30;
-				width = 84;
+				height = 3;
+				width = 64;
+				x = hero.x-((width-hero.width)/2);
+				y = hero.y-height;
 			}
 			else if(hero.direction == 'down')
 			{
-				x = hero.x-10;
-				y = hero.y+64;
-				height = 30;
-				width = 84;
+				height = 3;
+				width = 64;
+				x = hero.x-((width-hero.width)/2);
+				y = hero.y+hero.height;
 			}
 			hero.anims.play('attack_'+hero.direction);
 			HitBox = scene.physics.add.sprite(x,y, null);
@@ -141,8 +141,18 @@ class StateMachine
 				{
 					scene.monsterlist[i].minusHealth();
 					alert("Hit Test: Monster " + i + " health: " + scene.monsterlist[i].health);
-					if(scene.monsterlist[i].health == 0)
-						scene.monsterlist[i].body.destroy();
+					if(scene.monsterlist[i].health <= 0)
+					{
+						if(scene.monsterlist[i].status == 1)
+						{
+							scene.monsterlist[i].body.anims.stop();
+							scene.monsterlist[i].body.setTexture('redmonster');
+							scene.monsterlist[i].health = 150;
+							scene.monsterlist[i].status = 2;
+						}
+						else
+							scene.monsterlist[i].body.destroy();
+					}
 				}
 			}
 			HitBox.destroy();

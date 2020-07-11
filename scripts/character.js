@@ -6,9 +6,10 @@ function LoadImages(scene)
     scene.load.spritesheet('attacking_pic', './assets/as_attacking.png', {frameWidth: 64, frameHeight: 64});
     scene.load.spritesheet('vendor', './assets/vendor.png', {frameWidth: 64, frameHeight: 64});
 	scene.load.spritesheet('greenmonster','./assets/MONSTER/greenmonster.png', {frameWidth: 64, frameHeight: 64});
+	scene.load.spritesheet('testchar', './assets/testcharx2.png', {frameWidth: 64, frameHeight: 106});
     scene.load.image('shuriken', './assets/shuriken.png');
     scene.load.image('redmonster', './assets/MONSTER/red_monster.png');
-    scene.load.image('tiles', './assets/tile/tilesetx2.png');
+    scene.load.image('tiles', './assets/tile/new_tilesetx2.png');
     scene.load.tilemapCSV('map', './assets/tile/map.csv');
 }
 
@@ -105,6 +106,13 @@ function LoadAnimation(scene)
         frameRate: 5,
         repeat: -1
         });
+	
+	 scene.anims.create({
+        key: 'test',
+        frames: scene.anims.generateFrameNumbers('testchar', { start: 0, end:1}),
+        frameRate: 3,
+        repeat: -1
+        });
 }
 
 function addNPClist(NPClist, scene)
@@ -134,6 +142,8 @@ function addObjects(scene)
 	scene.st = scene.map.addTilesetImage("tiles");
 	scene.map.createStaticLayer(0, scene.st);
 	scene.player = scene.physics.add.sprite(128, 256, 'idle_pic');
+	scene.testplayer = scene.physics.add.sprite(256, 256, 'testchar');
+	scene.testplayer.anims.play('test');
 	scene.monsterlist = new Array();
 	addMonster(scene.monsterlist, scene);
 	scene.NPClist = new Array();
