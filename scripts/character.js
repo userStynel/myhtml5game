@@ -9,7 +9,7 @@ function LoadImages(scene)
 	scene.load.spritesheet('testchar', './assets/testcharx2.png', {frameWidth: 64, frameHeight: 106});
     scene.load.image('shuriken', './assets/shuriken.png');
     scene.load.image('redmonster', './assets/MONSTER/red_monster.png');
-    scene.load.image('tiles', './assets/tile/new_tilesetx2.png');
+    scene.load.image('tiles', './assets/tile/tileset32.png');
     scene.load.tilemapCSV('map', './assets/tile/map.csv');
 }
 
@@ -117,8 +117,8 @@ function LoadAnimation(scene)
 
 function addNPClist(NPClist, scene)
 {
-	NPClist.push(scene.physics.add.sprite(170*1,170*1, 'rabbit'));
-	NPClist.push(scene.physics.add.sprite(170*2,170*2, 'vendor'));
+	NPClist.push(scene.physics.add.sprite(600,600, 'rabbit'));
+	NPClist.push(scene.physics.add.sprite(300, 600, 'vendor'));
 	NPClist[1].setInteractive();
     NPClist[1].on('pointerdown', function(){dialogue("vendor")});
     NPClist[0].setInteractive();
@@ -127,10 +127,10 @@ function addNPClist(NPClist, scene)
 
 function addMonster(Monlist, scene)
 {
-	for(var i = 0; i<7; i++)
+	for(var i = 0; i<5; i++)
 	{
-		Monlist.push(new Monster(100*i, 100*i, scene));
-		scene.physics.add.collider(scene.player, Monlist[i].body);
+		Monlist.push(new Monster(70*(i+3), 70*(i+3), scene));
+		//scene.physics.add.collider(scene.player, Monlist[i].body);
 		Monlist[i].body.setVelocity(0, 0);
 	}
 	
@@ -138,11 +138,11 @@ function addMonster(Monlist, scene)
 
 function addObjects(scene)
 {
-	scene.map = scene.make.tilemap({key: 'map', tileWidth:64, tileHeight:64});
+	scene.map = scene.make.tilemap({key: 'map', tileWidth:32, tileHeight:32});
 	scene.st = scene.map.addTilesetImage("tiles");
 	scene.map.createStaticLayer(0, scene.st);
 	scene.player = scene.physics.add.sprite(128, 256, 'idle_pic');
-	scene.testplayer = scene.physics.add.sprite(256, 256, 'testchar');
+	scene.testplayer = scene.physics.add.sprite(150, 600, 'testchar');
 	scene.testplayer.anims.play('test');
 	scene.monsterlist = new Array();
 	addMonster(scene.monsterlist, scene);

@@ -123,6 +123,7 @@ class StateMachine
 				width = 64;
 				x = hero.x-((width-hero.width)/2);
 				y = hero.y-height;
+				alert("abc");
 			}
 			else if(hero.direction == 'down')
 			{
