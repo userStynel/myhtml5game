@@ -7,9 +7,10 @@ function LoadImages(scene)
     scene.load.spritesheet('vendor', './assets/vendor.png', {frameWidth: 64, frameHeight: 64});
 	scene.load.spritesheet('greenmonster','./assets/MONSTER/greenmonster.png', {frameWidth: 64, frameHeight: 64});
 	scene.load.spritesheet('testchar', './assets/testcharx2.png', {frameWidth: 64, frameHeight: 106});
+	scene.load.image('testchar2', './assets/test.png');
     scene.load.image('shuriken', './assets/shuriken.png');
     scene.load.image('redmonster', './assets/MONSTER/red_monster.png');
-    scene.load.image('tiles', './assets/tile/tileset32.png');
+    scene.load.image('tiles', './assets/tile/tileset.png');
     scene.load.tilemapCSV('map', './assets/tile/map.csv');
 }
 
@@ -138,12 +139,13 @@ function addMonster(Monlist, scene)
 
 function addObjects(scene)
 {
-	scene.map = scene.make.tilemap({key: 'map', tileWidth:32, tileHeight:32});
+	scene.map = scene.make.tilemap({key: 'map', tileWidth:64, tileHeight:64});
 	scene.st = scene.map.addTilesetImage("tiles");
 	scene.map.createStaticLayer(0, scene.st);
 	scene.player = scene.physics.add.sprite(128, 256, 'idle_pic');
-	scene.testplayer = scene.physics.add.sprite(150, 600, 'testchar');
-	scene.testplayer.anims.play('test');
+	scene.testplayer2 = scene.physics.add.sprite(100, 600, 'testchar2');
+	scene.testplayer2.setInteractive();
+	scene.testplayer2.on('pointerdown', function(){dialogue("ninja")});
 	scene.monsterlist = new Array();
 	addMonster(scene.monsterlist, scene);
 	scene.NPClist = new Array();
