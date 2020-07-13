@@ -144,7 +144,7 @@ function loadMonster(Monlist, scene)
 	for(var i = 0; i<5; i++)
 	{
 		Monlist.push(new Monster(70*(i+3), 70*(i+3), scene));
-		scene.physics.add.collider(scene.player, Monlist[i].body, function()
+		scene.physics.add.collider(scene.player.body, Monlist[i].body, function()
 								   {
 									if(scene.health <=0)
 									{alert("Legend is never die");} 
@@ -180,10 +180,10 @@ function dialogue(name)
 
 function loadPlayer(scene)
 {
-	scene.player = scene.physics.add.sprite(128, 256, 'idle_pic');
+	scene.player = new Player(128, 256, scene);
 	scene.player.direction = "down";
-	scene.player.setCollideWorldBounds(true); 
-	scene.player.anims.play('idle-'+scene.player.direction, true); 
+	scene.player.body.setCollideWorldBounds(true); 
+	scene.player.body.anims.play('idle-'+scene.player.direction, true); 
 	
 	
 	scene.testplayer2 = scene.physics.add.sprite(100, 600, 'testchar2');

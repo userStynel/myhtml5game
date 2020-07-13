@@ -25,20 +25,30 @@
         }
     };
 
-    var game = new Phaser.Game(config);	
+    var game = new Phaser.Game(config);
+	
 	class Monster
 	{
 		constructor(x, y, scene)
 		{
-		this.body = scene.physics.add.sprite(x,y, 'greenmonster');
-		this.body.setCollideWorldBounds(true); 
-		this.body.anims.play('greenmonster-idle', true);
-		this.health = 100;
-		this.status = 1;
+			this.body = scene.physics.add.sprite(x,y, 'character_anim');
+			this.body.setCollideWorldBounds(true); 
+			this.body.anims.play('greenmonster-idle', true);
+			this.health = 100;
+			this.status = 1;
 		}
 		minusHealth()
 		{
 			this.health -= 10;
+		}
+	}
+		
+	class Player
+	{
+		constructor(x, y, scene)
+		{
+			this.body = scene.physics.add.sprite(x, y, 'greenmonster');
+			this.health = 333;
 		}
 	}
 		

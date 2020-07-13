@@ -65,7 +65,7 @@ class IdleState extends State
 {
     enter(scene, hero)
     {
-        hero.setVelocity(0);
+        hero.body.setVelocity(0);
     }
 	
     execute(scene, hero)
@@ -80,7 +80,7 @@ class IdleState extends State
             this.stateMachine.transistion('swing');
             return;
         }
-        hero.anims.play('idle-'+hero.direction, true);
+        hero.body.anims.play('idle-'+hero.direction, true);
     }
 }
 
@@ -100,25 +100,25 @@ class MoveState extends State
         }
         if(scene.keys.A.isDown)
         {
-        	hero.setVelocityX(-50);
+        	hero.body.setVelocityX(-50);
             hero.direction = "left"
         }
         if(scene.keys.D.isDown)
 		{
-            hero.setVelocityX(50);
+            hero.body.setVelocityX(50);
             hero.direction = "right"
 		}
         if(scene.keys.W.isDown)
         {
-			hero.setVelocityY(-50);
+			hero.body.setVelocityY(-50);
 			hero.direction = "up";
         }
         if(scene.keys.S.isDown)
         {
-			hero.setVelocityY(50);
+			hero.body.setVelocityY(50);
             hero.direction = "down";
         }
-       hero.anims.play('walking-'+hero.direction, true);
+       hero.body.anims.play('walking-'+hero.direction, true);
 	}
 }
 
@@ -129,41 +129,41 @@ class SwingState extends State
 		var HitBox;
 		var collider;
 		var x, y, height, width;
-		hero.setVelocityX(0);
+		hero.body.setVelocityX(0);
 		if(hero.direction == 'left')
 		{
 			height = 64;
 			width = 3;
 			x = hero.x;
-			y = hero.y-((height-hero.height)/2);
+			y = hero.y-((height-hero.body.height)/2);
 		}
 		else if(hero.direction == 'right')
 		{
 			height = 64;
 			width = 3;
-			x = hero.x+hero.width;
-			y = hero.y-((height-hero.height)/2);
+			x = hero.x+hero.body.width;
+			y = hero.y-((height-hero.body.height)/2);
 		}
 		else if(hero.direction == 'up')
 		{
 			height = 3;
 			width = 64;
-			x = hero.x-((width-hero.width)/2);
-			y = hero.y-height;
+			x = hero.body.x-((width-hero.body.width)/2);
+			y = hero.body.y-height;
 		}
 		else if(hero.direction == 'down')
 		{
 			height = 3;
 			width = 64;
-			x = hero.x-((width-hero.width)/2);
-			y = hero.y+hero.height;
+			x = hero.body.x-((width-hero.width)/2);
+			y = hero.body.y+hero.height;
 		}
-		hero.anims.play('attack_'+hero.direction);
+		hero.body.anims.play('attack_'+hero.direction);
 		HitBox = scene.physics.add.sprite(x,y, null);
 		HitBox.height =height;
 		HitBox.width = width;
 		searchingMonster(scene, HitBox);
 		HitBox.destroy();
-        hero.once('animationcomplete', () => {this.stateMachine.transistion('idle');});
+        hero.body.once('animationcomplete', () => {this.stateMachine.transistion('idle');});
 	}
 }
