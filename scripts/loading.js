@@ -1,12 +1,13 @@
-function LoadImages(scene)
+function loadImages(scene)
 {
-	//scene.load.setBaseURL('https://raw.githubusercontent.com/userStynel/myhtml5game/single');
+	// 이미지를 로드합니다
 	scene.load.spritesheet('rabbit', './assets/rabbit.png',  { frameWidth: 128, frameHeight: 128});
     scene.load.spritesheet('character_anim', './assets/as.png', { frameWidth: 64, frameHeight: 64});
     scene.load.spritesheet('attacking_pic', './assets/as_attacking.png', {frameWidth: 64, frameHeight: 64});
     scene.load.spritesheet('vendor', './assets/vendor.png', {frameWidth: 64, frameHeight: 64});
 	scene.load.spritesheet('greenmonster','./assets/MONSTER/greenmonster.png', {frameWidth: 64, frameHeight: 64});
 	scene.load.spritesheet('testchar', './assets/testcharx2.png', {frameWidth: 64, frameHeight: 106});
+	scene.load.image('heart', './assets/hb.png');
 	scene.load.image('testchar2', './assets/test.png');
     scene.load.image('shuriken', './assets/shuriken.png');
     scene.load.image('redmonster', './assets/MONSTER/red_monster.png');
@@ -14,8 +15,9 @@ function LoadImages(scene)
     scene.load.tilemapCSV('map', './assets/tile/map.csv');
 }
 
-function LoadAnimation(scene)
+function loadAnimation(scene)
 {
+	// 애니메이션을 로드합니다
 	scene.anims.create({
         key: 'idle-down',
         frames: scene.anims.generateFrameNumbers('character_anim', { start: 0, end: 1 }),
@@ -100,14 +102,12 @@ function LoadAnimation(scene)
         frameRate: 5,
         repeat: -1
         });
-	
 	 scene.anims.create({
         key: 'greenmonster-idle',
         frames: scene.anims.generateFrameNumbers('greenmonster', { start: 0, end:2}),
         frameRate: 5,
         repeat: -1
         });
-	
 	 scene.anims.create({
         key: 'test',
         frames: scene.anims.generateFrameNumbers('testchar', { start: 0, end:1}),
@@ -116,39 +116,86 @@ function LoadAnimation(scene)
         });
 }
 
-function addNPClist(NPClist, scene)
+function loadMap(scene)
 {
-	NPClist.push(scene.physics.add.sprite(600,600, 'rabbit'));
-	NPClist.push(scene.physics.add.sprite(300, 600, 'vendor'));
-	NPClist[1].setInteractive();
-    NPClist[1].on('pointerdown', function(){dialogue("vendor")});
-    NPClist[0].setInteractive();
-    NPClist[0].on('pointerdown', function(){dialogue("rabbit")});
+	// 맵을 로드합니다
+	scene.map = scene.make.tilemap({key: 'map', tileWidth:64, tileHeight:64});
+	scene.tileImages = scene.map.addTilesetImage("tiles");
+	scene.map.createStaticLayer(0, scene.tileImages, 0, 80);
 }
 
-function addMonster(Monlist, scene)
+function loadNPC(NPClist, scene)
+{
+	// NPC를 로드합니다
+	NPClist.push(scene.physics.add.sprite(600,600, 'rabbit'));
+	NPClist.push(scene.physics.add.sprite(300, 600, 'vendor'));
+	
+	NPClist[1].setInteractive();
+    NPClist[1].on('pointerdown', function(){dialogue("vendor")});
+	NPClist[1].anims.play('idle2_left', true);
+	
+    NPClist[0].setInteractive();
+    NPClist[0].on('pointerdown', function(){dialogue("rabbit")});
+	NPClist[0].anims.play('rabbit_idle', true);
+}
+
+function loadMonster(Monlist, scene)
 {
 	for(var i = 0; i<5; i++)
 	{
 		Monlist.push(new Monster(70*(i+3), 70*(i+3), scene));
-		//scene.physics.add.collider(scene.player, Monlist[i].body);
+		scene.physics.add.collider(scene.player, Monlist[i].body, function()
+								   {
+									if(scene.health <=0)
+									{alert("Legend is never die");} 
+									else
+									{
+										if(scene.health>=30)
+										{scene.health -= 2;}
+										else
+										{scene.health = 0;}
+										scene.headerUI.heartBar.fillRect(0, 0, scene.health-333, 48);
+									}
+								   });
 		Monlist[i].body.setVelocity(0, 0);
 	}
 	
 }
 
-function addObjects(scene)
+function dialogue(name)
 {
-	scene.map = scene.make.tilemap({key: 'map', tileWidth:64, tileHeight:64});
-	scene.st = scene.map.addTilesetImage("tiles");
-	scene.map.createStaticLayer(0, scene.st);
+    var rand = Math.floor(Math.random()*2);
+    if(name == "vendor")
+        alert("Hi! I'm Vender, Do you interested in my stuff?");
+    else if(name == "rabbit")
+    {
+        if(rand == 0)
+            alert("Hi I'm taking Giant Rabbit from weird world!");
+        else if(rand == 1)
+            alert("I love you so Much!");
+    }
+	else if(name == "ninja")
+		alert("Hi! I'm NINJA!");
+}
+
+function loadPlayer(scene)
+{
 	scene.player = scene.physics.add.sprite(128, 256, 'idle_pic');
+	scene.player.direction = "down";
+	scene.player.setCollideWorldBounds(true); 
+	scene.player.anims.play('idle-'+scene.player.direction, true); 
+	
+	
 	scene.testplayer2 = scene.physics.add.sprite(100, 600, 'testchar2');
 	scene.testplayer2.setInteractive();
 	scene.testplayer2.on('pointerdown', function(){dialogue("ninja")});
+}
+
+function loadObjects(scene)
+{
+	loadPlayer(scene);
 	scene.monsterlist = new Array();
-	addMonster(scene.monsterlist, scene);
+	loadMonster(scene.monsterlist, scene);
 	scene.NPClist = new Array();
-	addNPClist(scene.NPClist, scene);
-    scene.player.direction = "down";
+	loadNPC(scene.NPClist, scene);
 }

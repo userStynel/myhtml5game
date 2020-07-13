@@ -4,8 +4,9 @@
     <script src="./phaser-3.23.0/dist/phaser-arcade-physics.min.js"></script>
 </head>
 <body>
-    <script src="./scripts/character.js"></script>
+    <script src="./scripts/loading.js"></script>
     <script src="./scripts/statemachine.js"></script>
+	<script src="./scripts/UI.js"></script>
     <script>
     var config = {
         type: Phaser.AUTO,
@@ -24,52 +25,37 @@
         }
     };
 
-    var game = new Phaser.Game(config);
-
-    function dialogue(name)
-    {
-        var rand = Math.floor(Math.random()*2);
-        if(name == "vendor")
-            alert("Hi! I'm Vender, Do you interested in my stuff?");
-        else if(name == "rabbit")
-        {
-            if(rand == 0)
-                alert("Hi I'm taking Giant Rabbit from weird world!");
-            else if(rand == 1)
-                alert("I love you so Much!");
-        }
-		else if(name == "ninja")
-			alert("Hi! I'm NINJA!");
-
-    }
-	
-	function Monster(x, y, scene)
+    var game = new Phaser.Game(config);	
+	class Monster
 	{
+		constructor(x, y, scene)
+		{
 		this.body = scene.physics.add.sprite(x,y, 'greenmonster');
 		this.body.setCollideWorldBounds(true); 
 		this.body.anims.play('greenmonster-idle', true);
 		this.health = 100;
 		this.status = 1;
-		this.minusHealth = function(){this.health -= 10;}
+		}
+		minusHealth()
+		{
+			this.health -= 10;
+		}
 	}
 		
     function preload ()
     {
-        LoadImages(this);
+        loadImages(this);
     }
 
     function create ()
     {
-		LoadAnimation(this);
-		addObjects(this);
+		createUI(this);
+		loadAnimation(this);
+		loadMap(this);
+		loadObjects(this);
+		this.health = 333;
         this.keys = this.input.keyboard.addKeys('A, D, W, S, SPACE');
-        this.stateMachine = new StateMachine('idle', {idle: new IdleState(), move: new MoveState(), swing: new SwingState(),}, [this, this.player]);
-        this.player.setBounce(0.2);
-		this.player.scale;
-		this.NPClist[1].anims.play('idle2_left', true);
-        this.player.setCollideWorldBounds(true); 
-        this.player.anims.play('idle-'+this.player.direction, true);  
-        this.NPClist[0].anims.play('rabbit_idle', true);
+        this.stateMachine = new StateMachine('idle', {idle: new IdleState(), move: new MoveState(), swing: new SwingState(),}, [this, this.player]); 
     }
 
     function update()
