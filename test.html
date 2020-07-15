@@ -29,11 +29,11 @@
 	
 	class Monster
 	{
-		constructor(x, y, scene)
+		constructor(x, y, scene, texture)
 		{
-			this.body = scene.physics.add.sprite(x,y, 'character_anim');
+			this.body = scene.physics.add.sprite(x,y, texture);
 			this.body.setCollideWorldBounds(true); 
-			this.body.anims.play('greenmonster-idle', true);
+			this.body.anims.play(texture+'-idle', true);
 			this.health = 100;
 			this.status = 1;
 		}

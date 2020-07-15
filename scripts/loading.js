@@ -6,13 +6,15 @@ function loadImages(scene)
     scene.load.spritesheet('attacking_pic', './assets/as_attacking.png', {frameWidth: 64, frameHeight: 64});
     scene.load.spritesheet('vendor', './assets/vendor.png', {frameWidth: 64, frameHeight: 64});
 	scene.load.spritesheet('greenmonster','./assets/MONSTER/greenmonster.png', {frameWidth: 64, frameHeight: 64});
-	scene.load.spritesheet('testchar', './assets/testcharx2.png', {frameWidth: 64, frameHeight: 106});
+	scene.load.spritesheet('newslime', './assets/MONSTER/newSlime.png',{frameWidth: 64, frameHeight: 50});
 	scene.load.image('heart', './assets/hb.png');
 	scene.load.image('testchar2', './assets/test.png');
     scene.load.image('shuriken', './assets/shuriken.png');
     scene.load.image('redmonster', './assets/MONSTER/red_monster.png');
     scene.load.image('tiles', './assets/tile/tileset.png');
     scene.load.tilemapCSV('map', './assets/tile/map.csv');
+	scene.load.image('testmonster', './assets/MONSTER/newSlime.png');
+	scene.load.image('csvc', './assets/csvc.png');
 }
 
 function loadAnimation(scene)
@@ -80,13 +82,13 @@ function loadAnimation(scene)
         });
     scene.anims.create({
         key: 'attack_left',
-        frames: scene.anims.generateFrameNumbers('attacking_pic', { start: 15, end: 19 }),
+        frames: scene.anims.generateFrameNumbers('attacking_pic', { start: 13, end: 15 }),
         frameRate: 11,
         repeat: 0
         });
     scene.anims.create({
         key: 'attack_right',
-        frames: scene.anims.generateFrameNumbers('attacking_pic', { start: 10, end: 14 }),
+        frames: scene.anims.generateFrameNumbers('attacking_pic', { start: 10, end: 12 }),
         frameRate: 11,
         repeat: 0
         });
@@ -114,6 +116,12 @@ function loadAnimation(scene)
         frameRate: 3,
         repeat: -1
         });
+	 scene.anims.create({
+        key: 'newslime-idle',
+        frames: scene.anims.generateFrameNumbers('newslime', { start: 0, end:2}),
+        frameRate: 3,
+        repeat: -1
+        });
 }
 
 function loadMap(scene)
@@ -127,8 +135,9 @@ function loadMap(scene)
 function loadNPC(NPClist, scene)
 {
 	// NPC를 로드합니다
-	NPClist.push(scene.physics.add.sprite(600,600, 'rabbit'));
+	NPClist.push(scene.physics.add.sprite(600, 600, 'rabbit'));
 	NPClist.push(scene.physics.add.sprite(300, 600, 'vendor'));
+	NPClist.push(scene.physics.add.sprite(750, 600, 'csvc'));
 	
 	NPClist[1].setInteractive();
     NPClist[1].on('pointerdown', function(){dialogue("vendor")});
@@ -141,9 +150,14 @@ function loadNPC(NPClist, scene)
 
 function loadMonster(Monlist, scene)
 {
+	var texture;
 	for(var i = 0; i<5; i++)
 	{
-		Monlist.push(new Monster(70*(i+3), 70*(i+3), scene));
+		if(i%2==0)
+			texture = 'greenmonster';
+		else
+			texture = 'newslime';
+		Monlist.push(new Monster(70*(i+3), 70*(i+3), scene, texture));
 		scene.physics.add.collider(scene.player.body, Monlist[i].body, function()
 								   {
 									if(scene.health <=0)
@@ -158,8 +172,8 @@ function loadMonster(Monlist, scene)
 									}
 								   });
 		Monlist[i].body.setVelocity(0, 0);
+		Monlist[i].body.setOrigin(0, 0);
 	}
-	
 }
 
 function dialogue(name)

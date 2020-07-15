@@ -155,8 +155,8 @@ class SwingState extends State
 		{
 			height = 3;
 			width = 64;
-			x = hero.body.x-((width-hero.width)/2);
-			y = hero.body.y+hero.height;
+			x = hero.body.x-((width-hero.body.width)/2);
+			y = hero.body.y+hero.body.height;
 		}
 		hero.body.anims.play('attack_'+hero.direction);
 		HitBox = scene.physics.add.sprite(x,y, null);
