@@ -32,9 +32,15 @@
 		constructor(x, y, scene, texture)
 		{
 			this.body = scene.physics.add.sprite(x,y, texture);
+			this.body.setVelocity(0, 0);
+			this.body.setOrigin(0, 0);
 			this.body.setCollideWorldBounds(true); 
 			this.body.anims.play(texture+'-idle', true);
+			this.healthbar = scene.add.sprite(x+this.body.width/2-47,y-15, 'monsterhealthbar');
+			this.healthbar.setOrigin(0,0);
 			this.health = 100;
+			this.gauge = scene.add.graphics({x:x+this.body.width/2-47+90, y:y-13});
+			this.gauge.fillStyle('0xDDF3F5', 1);
 			this.status = 1;
 		}
 		minusHealth()
@@ -48,6 +54,7 @@
 		constructor(x, y, scene)
 		{
 			this.body = scene.physics.add.sprite(x, y, 'greenmonster');
+			this.body.setOrigin(0, 0);
 			this.health = 333;
 		}
 	}
@@ -71,6 +78,13 @@
     function update()
     {
         this.stateMachine.step();
+		for(var i = 0; i<this.monsterlist.length; i++)
+		{
+			this.monsterlist[i].healthbar.setX(this.monsterlist[i].body.x+this.monsterlist[i].body.width/2-47);
+			this.monsterlist[i].gauge.setX(this.monsterlist[i].body.x+this.monsterlist[i].body.width/2-47+90);
+			this.monsterlist[i].healthbar.setY(this.monsterlist[i].body.y-15);
+			this.monsterlist[i].gauge.setY(this.monsterlist[i].body.y-13);			
+		}
     }
     </script>
 </body>

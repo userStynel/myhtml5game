@@ -8,6 +8,7 @@ function loadImages(scene)
 	scene.load.spritesheet('greenmonster','./assets/MONSTER/greenmonster.png', {frameWidth: 64, frameHeight: 64});
 	scene.load.spritesheet('newslime', './assets/MONSTER/newSlime.png',{frameWidth: 64, frameHeight: 50});
 	scene.load.image('heart', './assets/hb.png');
+	scene.load.image('monsterhealthbar', './assets/MonsterHealthBar.png');
 	scene.load.image('testchar2', './assets/test.png');
     scene.load.image('shuriken', './assets/shuriken.png');
     scene.load.image('redmonster', './assets/MONSTER/red_monster.png');
@@ -138,6 +139,7 @@ function loadNPC(NPClist, scene)
 	NPClist.push(scene.physics.add.sprite(600, 600, 'rabbit'));
 	NPClist.push(scene.physics.add.sprite(300, 600, 'vendor'));
 	NPClist.push(scene.physics.add.sprite(750, 600, 'csvc'));
+	NPClist.push(scene.add.sprite(750, 700, 'monsterhealthbar'));
 	
 	NPClist[1].setInteractive();
     NPClist[1].on('pointerdown', function(){dialogue("vendor")});
@@ -171,8 +173,6 @@ function loadMonster(Monlist, scene)
 										scene.headerUI.heartBar.fillRect(0, 0, scene.health-333, 48);
 									}
 								   });
-		Monlist[i].body.setVelocity(0, 0);
-		Monlist[i].body.setOrigin(0, 0);
 	}
 }
 

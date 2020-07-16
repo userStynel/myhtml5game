@@ -4,8 +4,11 @@ function searchingMonster(scene, HITBOX)
 	{
 		if(scene.physics.world.collide(HITBOX, scene.monsterlist[i].body))
 		{
-			scene.monsterlist[i].minusHealth();
+			// 체력바 세로길이 86px;
+			//-86*10/(fullhp)
 			alert("Hit Test: Monster " + i + " health: " + scene.monsterlist[i].health);
+			scene.monsterlist[i].minusHealth();
+			scene.monsterlist[i].gauge.fillRect(0, 0, -86*(100+50*(scene.monsterlist[i].status == 2)-scene.monsterlist[i].health)/(100+50*(scene.monsterlist[i].status == 2)), 12);
 			if(scene.monsterlist[i].health <= 0)
 			{
 				if(scene.monsterlist[i].status == 1)
@@ -14,9 +17,14 @@ function searchingMonster(scene, HITBOX)
 					scene.monsterlist[i].body.setTexture('redmonster');
 					scene.monsterlist[i].health = 150;
 					scene.monsterlist[i].status = 2;
+					scene.monsterlist[i].gauge.clear();
 				}
 				else
+				{
 					scene.monsterlist[i].body.destroy();
+					scene.monsterlist[i].gauge.destroy();
+					scene.monsterlist[i].healthbar.destroy();
+				}
 			}
 		}
 	}	
@@ -134,15 +142,15 @@ class SwingState extends State
 		{
 			height = 64;
 			width = 3;
-			x = hero.x;
-			y = hero.y-((height-hero.body.height)/2);
+			x = hero.body.x;
+			y = hero.body.y-((height-hero.body.height)/2);
 		}
 		else if(hero.direction == 'right')
 		{
 			height = 64;
 			width = 3;
-			x = hero.x+hero.body.width;
-			y = hero.y-((height-hero.body.height)/2);
+			x = hero.body.x+hero.body.width;
+			y = hero.body.y-((height-hero.body.height)/2);
 		}
 		else if(hero.direction == 'up')
 		{
@@ -160,6 +168,7 @@ class SwingState extends State
 		}
 		hero.body.anims.play('attack_'+hero.direction);
 		HitBox = scene.physics.add.sprite(x,y, null);
+		HitBox.setOrigin(0, 0);
 		HitBox.height =height;
 		HitBox.width = width;
 		searchingMonster(scene, HitBox);
