@@ -1,21 +1,38 @@
+function loadMonsterIMG(scene)
+{
+	scene.load.image('redmonster', './assets/MONSTER/red_monster.png');
+	scene.load.spritesheet('newslime', './assets/MONSTER/newSlime.png',{frameWidth: 64, frameHeight: 50});
+	scene.load.spritesheet('greenmonster','./assets/MONSTER/greenmonster.png', {frameWidth: 64, frameHeight: 64});
+}
+
+function loadNPCImg(scene)
+{
+	scene.load.spritesheet('rabbit', './assets/rabbit.png',  { frameWidth: 128, frameHeight: 128});
+	scene.load.spritesheet('vendor', './assets/vendor.png', {frameWidth: 64, frameHeight: 64});
+}
+
+function loadUIImg(scene)
+{
+	scene.load.image('heart', './assets/hb.png');
+	scene.load.image('monsterhealthbar', './assets/MonsterHealthBar.png');
+	//scene.load.spritesheet('hiteffect', './assets/hitmotion.png', {frameWidth: 86, frameHeight: 20});
+}
+
+function loadMapIMG(scene)
+{
+	scene.load.image('tiles', './assets/tile/tileset.png');
+    scene.load.tilemapCSV('map', './assets/tile/map.csv');
+}
+
 function loadImages(scene)
 {
 	// 이미지를 로드합니다
-	scene.load.spritesheet('rabbit', './assets/rabbit.png',  { frameWidth: 128, frameHeight: 128});
+	loadMonsterIMG(scene);
+	loadNPCImg(scene);
+	loadUIImg(scene);
+	loadMapIMG(scene);
     scene.load.spritesheet('character_anim', './assets/as.png', { frameWidth: 64, frameHeight: 64});
     scene.load.spritesheet('attacking_pic', './assets/as_attacking.png', {frameWidth: 64, frameHeight: 64});
-    scene.load.spritesheet('vendor', './assets/vendor.png', {frameWidth: 64, frameHeight: 64});
-	scene.load.spritesheet('greenmonster','./assets/MONSTER/greenmonster.png', {frameWidth: 64, frameHeight: 64});
-	scene.load.spritesheet('newslime', './assets/MONSTER/newSlime.png',{frameWidth: 64, frameHeight: 50});
-	scene.load.image('heart', './assets/hb.png');
-	scene.load.image('monsterhealthbar', './assets/MonsterHealthBar.png');
-	scene.load.image('testchar2', './assets/test.png');
-    scene.load.image('shuriken', './assets/shuriken.png');
-    scene.load.image('redmonster', './assets/MONSTER/red_monster.png');
-    scene.load.image('tiles', './assets/tile/tileset.png');
-    scene.load.tilemapCSV('map', './assets/tile/map.csv');
-	scene.load.image('testmonster', './assets/MONSTER/newSlime.png');
-	scene.load.image('csvc', './assets/csvc.png');
 }
 
 function loadAnimation(scene)
@@ -123,6 +140,12 @@ function loadAnimation(scene)
         frameRate: 3,
         repeat: -1
         });
+	 /*scene.anims.create({
+        key: 'hiteffectmotion',
+        frames: scene.anims.generateFrameNumbers('hiteffect', { start: 0, end:2}),
+        frameRate: 15,
+        repeat: 0
+        }); */
 }
 
 function loadMap(scene)
@@ -138,8 +161,6 @@ function loadNPC(NPClist, scene)
 	// NPC를 로드합니다
 	NPClist.push(scene.physics.add.sprite(600, 600, 'rabbit'));
 	NPClist.push(scene.physics.add.sprite(300, 600, 'vendor'));
-	NPClist.push(scene.physics.add.sprite(750, 600, 'csvc'));
-	NPClist.push(scene.add.sprite(750, 700, 'monsterhealthbar'));
 	
 	NPClist[1].setInteractive();
     NPClist[1].on('pointerdown', function(){dialogue("vendor")});
@@ -198,11 +219,6 @@ function loadPlayer(scene)
 	scene.player.direction = "down";
 	scene.player.body.setCollideWorldBounds(true); 
 	scene.player.body.anims.play('idle-'+scene.player.direction, true); 
-	
-	
-	scene.testplayer2 = scene.physics.add.sprite(100, 600, 'testchar2');
-	scene.testplayer2.setInteractive();
-	scene.testplayer2.on('pointerdown', function(){dialogue("ninja")});
 }
 
 function loadObjects(scene)

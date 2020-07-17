@@ -6,9 +6,11 @@ function searchingMonster(scene, HITBOX)
 		{
 			// 체력바 세로길이 86px;
 			//-86*10/(fullhp)
-			alert("Hit Test: Monster " + i + " health: " + scene.monsterlist[i].health);
+			//alert("Hit Test: Monster " + i + " health: " + scene.monsterlist[i].health);
 			scene.monsterlist[i].minusHealth();
-			scene.monsterlist[i].gauge.fillRect(0, 0, -86*(100+50*(scene.monsterlist[i].status == 2)-scene.monsterlist[i].health)/(100+50*(scene.monsterlist[i].status == 2)), 12);
+			scene.monsterlist[i].healthbar.gauge.fillRect(0, 0, -86*(100+50*(scene.monsterlist[i].status == 2)-scene.monsterlist[i].health)/(100+50*(scene.monsterlist[i].status == 2)), 12);
+			scene.monsterlist[i].body.setX(scene.monsterlist[i].body.x-5.5*Math.cos(scene.monsterlist[i].direction));
+		scene.monsterlist[i].body.setY(scene.monsterlist[i].body.y-5.5*Math.sin(scene.monsterlist[i].direction));
 			if(scene.monsterlist[i].health <= 0)
 			{
 				if(scene.monsterlist[i].status == 1)
@@ -17,13 +19,14 @@ function searchingMonster(scene, HITBOX)
 					scene.monsterlist[i].body.setTexture('redmonster');
 					scene.monsterlist[i].health = 150;
 					scene.monsterlist[i].status = 2;
-					scene.monsterlist[i].gauge.clear();
+					scene.monsterlist[i].healthbar.gauge.clear();
 				}
 				else
 				{
 					scene.monsterlist[i].body.destroy();
-					scene.monsterlist[i].gauge.destroy();
-					scene.monsterlist[i].healthbar.destroy();
+					scene.monsterlist[i].healthbar.background.destroy();
+					scene.monsterlist[i].healthbar.gauge.destroy();
+					scene.monsterlist.splice(i, 1);
 				}
 			}
 		}
@@ -140,39 +143,107 @@ class SwingState extends State
 		hero.body.setVelocityX(0);
 		if(hero.direction == 'left')
 		{
-			height = 64;
-			width = 3;
-			x = hero.body.x;
+			height = 86;
+			width = 30;
+			x = hero.body.x-width;
 			y = hero.body.y-((height-hero.body.height)/2);
 		}
 		else if(hero.direction == 'right')
 		{
-			height = 64;
-			width = 3;
+			height = 86;
+			width = 30;
 			x = hero.body.x+hero.body.width;
 			y = hero.body.y-((height-hero.body.height)/2);
 		}
 		else if(hero.direction == 'up')
 		{
-			height = 3;
-			width = 64;
+			height = 30;
+			width = 86;
 			x = hero.body.x-((width-hero.body.width)/2);
 			y = hero.body.y-height;
 		}
 		else if(hero.direction == 'down')
 		{
-			height = 3;
-			width = 64;
+			height = 30;
+			width = 86;
 			x = hero.body.x-((width-hero.body.width)/2);
 			y = hero.body.y+hero.body.height;
 		}
 		hero.body.anims.play('attack_'+hero.direction);
 		HitBox = scene.physics.add.sprite(x,y, null);
 		HitBox.setOrigin(0, 0);
-		HitBox.height =height;
-		HitBox.width = width;
+		HitBox.setSize(width, height);
+		//HitBox.anims.play('hiteffectmotion');
 		searchingMonster(scene, HitBox);
 		HitBox.destroy();
+		//HitBox.once('animationcomplete', () => {HitBox.destroy();});
         hero.body.once('animationcomplete', () => {this.stateMachine.transistion('idle');});
+	}
+}
+
+
+
+class MonsterIdleState extends State
+{
+	enter(scene, monster)
+	{
+		monster.body.setVelocity(0, 0);
+		monster.hideHealthbar(true);
+	}
+	execute(scene, monster)
+	{
+		if(Phaser.Math.Distance.Between(scene.player.body.x+scene.player.body.width/2, scene.player.body.y+scene.player.body.height/2, monster.body.x+monster.body.width/2, monster.body.y+monster.body.height/2)<=130)
+		{
+			monster.direction = Phaser.Math.Angle.Between(monster.body.x+monster.body.width/2, monster.body.y+monster.body.height/2,scene.player.body.x+scene.player.body.width/2, scene.player.body.y+scene.player.body.height/2);
+			if(100*monster.health/(100+50*(monster.status==2)) >= 50)
+				this.stateMachine.transistion('chasing');
+			else
+				this.stateMachine.transistion('running');
+		}
+		monster.body.anims.play(monster.body.texture.key+'-idle', true);
+	}
+}
+
+
+class MonsterChasingState extends State
+{
+	enter(scene, monster)
+	{
+		monster.hideHealthbar(false);
+	}
+	execute(scene, monster)
+	{
+		monster.body.anims.play(monster.body.texture.key+'-idle', true);
+		monster.body.setX(monster.body.x+0.3*Math.cos(monster.direction));
+		monster.body.setY(monster.body.y+0.3*Math.sin(monster.direction));
+		if(Phaser.Math.Distance.Between(scene.player.body.x+scene.player.body.width/2, scene.player.body.y+scene.player.body.height/2, monster.body.x+monster.body.width/2, monster.body.y+monster.body.height/2)>130)
+		{
+			this.stateMachine.transistion('idle');
+		}
+		else if(100*monster.health/(100+50*(monster.status==2)) < 50)
+			this.stateMachine.transistion('running');
+	}
+}
+
+
+class MonsterRunState extends State
+{
+	enter(scene, monster)
+	{
+		monster.hideHealthbar(false);
+	}
+	execute(scene, monster)
+	{
+		monster.body.anims.play(monster.body.texture.key+'-idle', true);
+		monster.body.setX(monster.body.x+0.3*Math.cos(-monster.direction));
+		monster.body.setY(monster.body.y+0.3*Math.sin(-monster.direction));
+		if(Phaser.Math.Distance.Between(scene.player.body.x+scene.player.body.width/2, scene.player.body.y+scene.player.body.height/2, monster.body.x+monster.body.width/2, monster.body.y+monster.body.height/2)>130)
+		{
+			this.stateMachine.transistion('idle');
+		}
+		else if(100*monster.health/(100+50*(monster.status==2)) >= 50)
+		{
+			this.stateMachine.transistion('chasing');
+		}
 	}
 }

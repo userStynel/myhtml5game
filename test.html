@@ -36,16 +36,29 @@
 			this.body.setOrigin(0, 0);
 			this.body.setCollideWorldBounds(true); 
 			this.body.anims.play(texture+'-idle', true);
-			this.healthbar = scene.add.sprite(x+this.body.width/2-47,y-15, 'monsterhealthbar');
-			this.healthbar.setOrigin(0,0);
+			this.healthbar = new HealthBar(scene, this);
 			this.health = 100;
-			this.gauge = scene.add.graphics({x:x+this.body.width/2-47+90, y:y-13});
-			this.gauge.fillStyle('0xDDF3F5', 1);
 			this.status = 1;
+			this.direction = 0;
+			this.stateMachine = new StateMachine('idle', {idle: new MonsterIdleState(), chasing: new MonsterChasingState(), running: new MonsterRunState()}, [scene, this]); 
+			
 		}
 		minusHealth()
 		{
 			this.health -= 10;
+		}
+		hideHealthbar(check)
+		{
+			if(check)
+			{
+				this.healthbar.background.setVisible(false);
+				this.healthbar.gauge.setVisible(false);
+			}
+			else
+			{
+				this.healthbar.background.setVisible(true);
+				this.healthbar.gauge.setVisible(true);
+			}
 		}
 	}
 		
@@ -53,8 +66,10 @@
 	{
 		constructor(x, y, scene)
 		{
-			this.body = scene.physics.add.sprite(x, y, 'greenmonster');
+			this.body = scene.physics.add.sprite(x, y, 'character_anim');
 			this.body.setOrigin(0, 0);
+			this.body.setDebug(true, true, '0xDDF3F5');
+			this.body.setDebugBodyColor('0xDDF3F5');
 			this.health = 333;
 		}
 	}
@@ -72,7 +87,7 @@
 		loadObjects(this);
 		this.health = 333;
         this.keys = this.input.keyboard.addKeys('A, D, W, S, SPACE');
-        this.stateMachine = new StateMachine('idle', {idle: new IdleState(), move: new MoveState(), swing: new SwingState(),}, [this, this.player]); 
+        this.stateMachine = new StateMachine('idle', {idle: new IdleState(), move: new MoveState(), swing: new SwingState()}, [this, this.player]); 
     }
 
     function update()
@@ -80,10 +95,11 @@
         this.stateMachine.step();
 		for(var i = 0; i<this.monsterlist.length; i++)
 		{
-			this.monsterlist[i].healthbar.setX(this.monsterlist[i].body.x+this.monsterlist[i].body.width/2-47);
-			this.monsterlist[i].gauge.setX(this.monsterlist[i].body.x+this.monsterlist[i].body.width/2-47+90);
-			this.monsterlist[i].healthbar.setY(this.monsterlist[i].body.y-15);
-			this.monsterlist[i].gauge.setY(this.monsterlist[i].body.y-13);			
+			this.monsterlist[i].healthbar.background.setX(this.monsterlist[i].body.x+this.monsterlist[i].body.width/2-47);
+			this.monsterlist[i].healthbar.gauge.setX(this.monsterlist[i].body.x+this.monsterlist[i].body.width/2-47+90);
+			this.monsterlist[i].healthbar.background.setY(this.monsterlist[i].body.y-15);
+			this.monsterlist[i].healthbar.gauge.setY(this.monsterlist[i].body.y-13);
+			this.monsterlist[i].stateMachine.step();
 		}
     }
     </script>
