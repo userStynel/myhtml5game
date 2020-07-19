@@ -111,22 +111,22 @@ class MoveState extends State
         }
         if(scene.keys.A.isDown)
         {
-        	hero.body.setVelocityX(-50);
+        	hero.body.setVelocityX(-55);
             hero.direction = "left"
         }
         if(scene.keys.D.isDown)
 		{
-            hero.body.setVelocityX(50);
+            hero.body.setVelocityX(55);
             hero.direction = "right"
 		}
         if(scene.keys.W.isDown)
         {
-			hero.body.setVelocityY(-50);
+			hero.body.setVelocityY(-55);
 			hero.direction = "up";
         }
         if(scene.keys.S.isDown)
         {
-			hero.body.setVelocityY(50);
+			hero.body.setVelocityY(55);
             hero.direction = "down";
         }
        hero.body.anims.play('walking-'+hero.direction, true);
@@ -194,7 +194,6 @@ class MonsterIdleState extends State
 	{
 		if(Phaser.Math.Distance.Between(scene.player.body.x+scene.player.body.width/2, scene.player.body.y+scene.player.body.height/2, monster.body.x+monster.body.width/2, monster.body.y+monster.body.height/2)<=130)
 		{
-			monster.direction = Phaser.Math.Angle.Between(monster.body.x+monster.body.width/2, monster.body.y+monster.body.height/2,scene.player.body.x+scene.player.body.width/2, scene.player.body.y+scene.player.body.height/2);
 			if(100*monster.health/(100+50*(monster.status==2)) >= 50)
 				this.stateMachine.transistion('chasing');
 			else
@@ -213,6 +212,7 @@ class MonsterChasingState extends State
 	}
 	execute(scene, monster)
 	{
+		monster.direction = Phaser.Math.Angle.Between(monster.body.x+monster.body.width/2, monster.body.y+monster.body.height/2,scene.player.body.x+scene.player.body.width/2, scene.player.body.y+scene.player.body.height/2);
 		monster.body.anims.play(monster.body.texture.key+'-idle', true);
 		monster.body.setX(monster.body.x+0.3*Math.cos(monster.direction));
 		monster.body.setY(monster.body.y+0.3*Math.sin(monster.direction));
@@ -234,9 +234,10 @@ class MonsterRunState extends State
 	}
 	execute(scene, monster)
 	{
+		monster.direction = Phaser.Math.Angle.Between(monster.body.x+monster.body.width/2, monster.body.y+monster.body.height/2,scene.player.body.x+scene.player.body.width/2, scene.player.body.y+scene.player.body.height/2);
 		monster.body.anims.play(monster.body.texture.key+'-idle', true);
-		monster.body.setX(monster.body.x+0.3*Math.cos(-monster.direction));
-		monster.body.setY(monster.body.y+0.3*Math.sin(-monster.direction));
+		monster.body.setX(monster.body.x-0.5*Math.cos(monster.direction));
+		monster.body.setY(monster.body.y-0.5*Math.sin(monster.direction));
 		if(Phaser.Math.Distance.Between(scene.player.body.x+scene.player.body.width/2, scene.player.body.y+scene.player.body.height/2, monster.body.x+monster.body.width/2, monster.body.y+monster.body.height/2)>130)
 		{
 			this.stateMachine.transistion('idle');

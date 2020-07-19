@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>TILE MAP EDITOR by STYNEL</title>
+		<meta charset = "utf-8">
+		<script>
+			var selected = -1;
+			var preselected = -1;
+			var numGaro = 10;
+			var numSero = 10;
+			var arr = [];
+		</script>
+		<script src = "./mapEditor/jquery-3.5.1.min.js"></script>
+		<script src = "./mapEditor/bootstrap-4.5.0-dist/js/bootstrap.min.js"></script>
+		<script src = "./mapEditor/scripts/slicingImage.js"></script>
+		<link rel = "stylesheet" href = "./mapEditor/bootstrap-4.5.0-dist/css/bootstrap.min.css">
+	</head>
+	<body>
+		<header>
+		<h2>TILE MAP EDITOR by STYNEL</h2>
+		<p>LOVE RED VELVET</p>
+		</header>
+		<hr>
+		<div style = "display:flex;">
+			<div id = "map" style = "margin-left:25px;"><button type="button" class="btn btn-outline-primary" onclick="converting(numGaro, numSero)">Convert to CSV</button></div>
+			<script>
+				var image = new Image();
+				image.onload = function(){cutImageUp(image, arr, 64, 64); makingTileSet(image.height/64, image.width/64, arr);}
+				image.src = './assets/tile/tileset.png';
+				makingMap(numGaro, numSero, 64, 64);
+			</script>
+			<div style="margin-right: 35px;">	
+				<div id = "tileset">
+					<h5> TILE SET</h5>
+					<div id = "collection"></div>
+				</div>
+				<div id = "options">
+					<div class="custom-control custom-checkbox">
+  						<input type="checkbox" class="custom-control-input" id="customCheck1">
+  						<label class="custom-control-label" for="customCheck1">Show Grid</label>
+					</div>
+				</div>
+			</div>
+			<div>
+				<h5>Answer</h5>
+				<p id = "answer"></p>
+			</div>
+		</div>
+	</body>
+</html>

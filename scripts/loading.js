@@ -7,8 +7,8 @@ function loadMonsterIMG(scene)
 
 function loadNPCImg(scene)
 {
-	scene.load.spritesheet('rabbit', './assets/rabbit.png',  { frameWidth: 128, frameHeight: 128});
-	scene.load.spritesheet('vendor', './assets/vendor.png', {frameWidth: 64, frameHeight: 64});
+	scene.load.spritesheet('rabbit', './assets/NPC/rabbit.png',  { frameWidth: 128, frameHeight: 128});
+	scene.load.spritesheet('vendor', './assets/NPC/vendor.png', {frameWidth: 64, frameHeight: 64});
 }
 
 function loadUIImg(scene)
@@ -154,6 +154,7 @@ function loadMap(scene)
 	scene.map = scene.make.tilemap({key: 'map', tileWidth:64, tileHeight:64});
 	scene.tileImages = scene.map.addTilesetImage("tiles");
 	scene.map.createStaticLayer(0, scene.tileImages, 0, 80);
+	scene.map.setCollision(1);
 }
 
 function loadNPC(NPClist, scene)
@@ -228,4 +229,6 @@ function loadObjects(scene)
 	loadMonster(scene.monsterlist, scene);
 	scene.NPClist = new Array();
 	loadNPC(scene.NPClist, scene);
+	
+	//scene.physics.add.collider(scene.player.body, scene.map.layer, function(){alert("dasd");});
 }
