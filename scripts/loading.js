@@ -1,6 +1,7 @@
 function loadMonsterIMG(scene)
 {
 	scene.load.image('redmonster', './assets/MONSTER/red_monster.png');
+	scene.load.spritesheet('tank', './assets/MONSTER/underground-mini-tank.png',{frameWidth: 64, frameHeight: 64});
 	scene.load.spritesheet('newslime', './assets/MONSTER/newSlime.png',{frameWidth: 64, frameHeight: 50});
 	scene.load.spritesheet('greenmonster','./assets/MONSTER/greenmonster.png', {frameWidth: 64, frameHeight: 64});
 }
@@ -140,6 +141,12 @@ function loadAnimation(scene)
         frameRate: 3,
         repeat: -1
         });
+	 scene.anims.create({
+        key: 'tank-idle',
+        frames: scene.anims.generateFrameNumbers('tank', { start: 0, end:1}),
+        frameRate: 7,
+        repeat: -1
+        });
 	 /*scene.anims.create({
         key: 'hiteffectmotion',
         frames: scene.anims.generateFrameNumbers('hiteffect', { start: 0, end:2}),
@@ -175,12 +182,14 @@ function loadNPC(NPClist, scene)
 function loadMonster(Monlist, scene)
 {
 	var texture;
-	for(var i = 0; i<5; i++)
+	for(var i = 0; i<13; i++)
 	{
-		if(i%2==0)
+		if(i%3==0)
 			texture = 'greenmonster';
-		else
+		else if(i%3 == 1)
 			texture = 'newslime';
+		else
+			texture = 'tank';
 		Monlist.push(new Monster(70*(i+3), 70*(i+3), scene, texture));
 		scene.physics.add.collider(scene.player.body, Monlist[i].body, function()
 								   {

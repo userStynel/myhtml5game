@@ -4,10 +4,21 @@
 		<title>TILE MAP EDITOR by STYNEL</title>
 		<meta charset = "utf-8">
 		<script>
+			
+			//const PENCIL = 0;
+			//const ERASER = 1;
+			//const SQUARE = 2;
+			
+			var tilePageList = [];
+			var src = [];
+			var dst = [];
+			var type = 0;
+			var now_page = 1;
 			var selected = -1;
-			var preselected = -1;
-			var numGaro = 10;
-			var numSero = 10;
+			var numGaro = 17;
+			var numSero = 17;
+			var sizeWidth = 64;
+			var sizeHeight = 64;
 			var arr = [];
 		</script>
 		<script src = "./mapEditor/jquery-3.5.1.min.js"></script>
@@ -16,35 +27,66 @@
 		<link rel = "stylesheet" href = "./mapEditor/bootstrap-4.5.0-dist/css/bootstrap.min.css">
 	</head>
 	<body>
-		<header>
+		<header style="padding-top:15px; padding-left:25px;">
 		<h2>TILE MAP EDITOR by STYNEL</h2>
-		<p>LOVE RED VELVET</p>
 		</header>
 		<hr>
 		<div style = "display:flex;">
-			<div id = "map" style = "margin-left:25px;"><button type="button" class="btn btn-outline-primary" onclick="converting(numGaro, numSero)">Convert to CSV</button></div>
+			<div id = "map" style = "margin-left:25px;">
 			<script>
 				var image = new Image();
-				image.onload = function(){cutImageUp(image, arr, 64, 64); makingTileSet(image.height/64, image.width/64, arr);}
+				image.onload = function(){cutImageUp(image, arr, 64, 64); makingTileSet(image.height/sizeHeight, image.width/sizeWidth, arr);}
 				image.src = './assets/tile/tileset.png';
 				makingMap(numGaro, numSero, 64, 64);
 			</script>
-			<div style="margin-right: 35px;">	
+			<button style = "margin-top:25px;" type="button" class="btn btn-outline-primary" onclick="converting(numGaro, numSero)">Convert to CSV</button>
+			<button style = "margin-top:25px;" type="button" class="btn btn-outline-primary"  data-toggle="modal" data-target="#exampleModal">LOAD</button>
+			</div>
+			<div style="margin-right: 35px; margin-left:25px;">	
 				<div id = "tileset">
 					<h5> TILE SET</h5>
 					<div id = "collection"></div>
+					<p id = "pageteller"></p>
 				</div>
 				<div id = "options">
+					<img id = "yukika" src = "./mapEditor/eraser_icon.png">
+					<script> document.getElementById("yukika").addEventListener('click', function(event){selected = -1;}); </script>
 					<div class="custom-control custom-checkbox">
-  						<input type="checkbox" class="custom-control-input" id="customCheck1">
+  						<input type="checkbox" class="custom-control-input" id="customCheck1" checked>
   						<label class="custom-control-label" for="customCheck1">Show Grid</label>
 					</div>
 				</div>
 			</div>
 			<div>
-				<h5>Answer</h5>
+				<h5>RESULT</h5>
+				<hr>
 				<p id = "answer"></p>
 			</div>
+		</div>
+		
+		
+		<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  			<div class="modal-dialog" role="document">
+    			<div class="modal-content">
+      				<div class="modal-header">
+        				<h5 class="modal-title" id="exampleModalLabel">LOADING MAP</h5>
+        				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          				<span aria-hidden="true">&times;</span>
+        				</button>
+      				</div>
+      				<div class="modal-body">
+        				<textarea id = "dosii" class="form-control" ></textarea>
+      				</div>
+      				<div class="modal-footer">
+        				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        				<button id = 'lovememore' type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+		 				<script>
+			 				document.getElementById('lovememore').addEventListener('click', function(event){loading(dosii.value);});
+							document.body.addEventListener('keydown', function(event){if(event.keyCode == 37 || event.keyCode == 39){switchingPage(event.keyCode-38);} switchingTile(event.keyCode);});
+		  				</script>
+      				</div>
+    			</div>
+  			</div>
 		</div>
 	</body>
 </html>

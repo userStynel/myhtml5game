@@ -4,9 +4,6 @@ function searchingMonster(scene, HITBOX)
 	{
 		if(scene.physics.world.collide(HITBOX, scene.monsterlist[i].body))
 		{
-			// 체력바 세로길이 86px;
-			//-86*10/(fullhp)
-			//alert("Hit Test: Monster " + i + " health: " + scene.monsterlist[i].health);
 			scene.monsterlist[i].minusHealth();
 			scene.monsterlist[i].healthbar.gauge.fillRect(0, 0, -86*(100+50*(scene.monsterlist[i].status == 2)-scene.monsterlist[i].health)/(100+50*(scene.monsterlist[i].status == 2)), 12);
 			scene.monsterlist[i].body.setX(scene.monsterlist[i].body.x-5.5*Math.cos(scene.monsterlist[i].direction));
