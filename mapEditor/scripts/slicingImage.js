@@ -151,6 +151,7 @@ function makingMap(numGaro, numSero, width, height)
 	{
 		var row = document.createElement('div');
 		row.setAttribute('style', "display:flex");
+		row.setAttribute('class', "maprow");
 		document.getElementById('map').appendChild(row);
 		for(var j=0; j<numSero; j++)
 		{
@@ -172,4 +173,90 @@ function makingMap(numGaro, numSero, width, height)
 	"height": height.toString()+"px",
 	"border": "1px black solid"
 	});
+}
+
+function switchingTileSize(new_width, new_height)
+{
+	sizeWidth = new_width;
+	sizeHeight = new_height;
+	document.getElementById('collection').removeChild();
+	makingTileSet(image.height/sizeHeight, image.width/sizeWidth, arr);
+}
+
+
+function switchingMapSize(new_Garo, new_Sero)
+{
+	if(new_Garo > numGaro && new_Sero > numSero)
+	{
+		var mr = document.getElementsByClassName("maprow");
+		for(var i=0; i<numGaro; i++)
+		{
+			for(var j=numSero; j<new_Sero; j++)
+			{
+				var cell = document.createElement('img');
+				cell.id = 'cell-'+i.toString()+'-'+j.toString();
+				cell.setAttribute('class', 'cells');
+				cell.setAttribute('alt', '');
+				cell.addEventListener('click', coloring);
+				cell.addEventListener('dragstart', function(event){console.log('dragstart @'+event.target.id); getCoord(event.target.id, src);});
+				cell.addEventListener('dragover', function(event){event.preventDefault()});
+				cell.addEventListener('drop', function(event){console.log('drop @'+event.target.id); getCoord(event.target.id, dst); drawingRECT(src[0], src[1], dst[0], dst[1]);});
+				mr[i].appendChild(cell);
+			}
+		}
+		for(var i=numGaro; i<new_Garo; i++)
+		{
+			var row = document.createElement('div');
+			row.setAttribute('style', "display:flex");
+			row.setAttribute('class', "maprow");
+			document.getElementById('map').appendChild(row);
+			for( var j=0; j<new_Sero; j++)
+			{
+				var cell = document.createElement('img');
+				cell.id = 'cell-'+i.toString()+'-'+j.toString();
+				cell.setAttribute('class', 'cells');
+				cell.setAttribute('alt', '');
+				cell.addEventListener('click', coloring);
+				cell.addEventListener('dragstart', function(event){console.log('dragstart @'+event.target.id); getCoord(event.target.id, src);});
+				cell.addEventListener('dragover', function(event){event.preventDefault()});
+				cell.addEventListener('drop', function(event){console.log('drop @'+event.target.id); getCoord(event.target.id, dst); drawingRECT(src[0], src[1], dst[0], dst[1]);});
+				row.appendChild(cell);
+			}
+		}
+	}
+	else if(new_Garo <= numGaro && new_Sero <= numSero)
+	{
+		for(var i=0; i<new_Garo; i++)
+		{
+			for(var j=new_Sero; j<numSero; j++)
+			{
+				var cell = document.getElementById('cell-'+i.toString()+'-'+j.toString());
+				cell.remove();
+			}
+		}
+		for(var i=new_Garo; i<numGaro; i++)
+		{
+			for(var j=0; j<numSero; j++)
+			{
+				var cell = document.getElementById('cell-'+i.toString()+'-'+j.toString());
+				cell.remove();
+			}
+		}
+	}
+	else if(new_Garo > numGaro && new_Sero <= numSero)
+	{
+		alert("test");
+	}
+	else if(new_Garo <= numGaro && new_Sero > numSero)
+	{
+		alert("test");
+	}
+	$('.cells').css({
+    "background-color": "white",
+    "width": sizeWidth.toString()+"px",
+	"height": sizeHeight.toString()+"px",
+	"border": "1px black solid"
+	});
+	numSero = new_Sero;
+	numGaro = new_Garo;
 }

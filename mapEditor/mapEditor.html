@@ -15,8 +15,8 @@
 			var type = 0;
 			var now_page = 1;
 			var selected = -1;
-			var numGaro = 17;
-			var numSero = 17;
+			var numGaro = 11;
+			var numSero = 11;
 			var sizeWidth = 64;
 			var sizeHeight = 64;
 			var arr = [];
@@ -32,6 +32,7 @@
 		</header>
 		<hr>
 		<div style = "display:flex;">
+			<div>
 			<div id = "map" style = "margin-left:25px;">
 			<script>
 				var image = new Image();
@@ -39,6 +40,7 @@
 				image.src = './assets/tile/tileset.png';
 				makingMap(numGaro, numSero, 64, 64);
 			</script>
+			</div>
 			<button style = "margin-top:25px;" type="button" class="btn btn-outline-primary" onclick="converting(numGaro, numSero)">Convert to CSV</button>
 			<button style = "margin-top:25px;" type="button" class="btn btn-outline-primary"  data-toggle="modal" data-target="#exampleModal">LOAD</button>
 			</div>
@@ -51,9 +53,52 @@
 				<div id = "options">
 					<img id = "yukika" src = "./mapEditor/eraser_icon.png">
 					<script> document.getElementById("yukika").addEventListener('click', function(event){selected = -1;}); </script>
+					<div style = "display:flex;">
+						<input class="form-control" type="text" placeholder="11" id = "input_mapWidth">
+						<input class="form-control" type="text" placeholder="11" id = "input_mapHeight">
+						<button type="button" class="btn btn-success btn-sm" id = "btn_changeMAPSIZE">SET SIZE</button>
+						<script>
+							document.getElementById('btn_changeMAPSIZE').addEventListener('click', 
+							function(event){
+								switchingMapSize(parseInt(document.getElementById("input_mapWidth").value), parseInt(document.getElementById("input_mapHeight").value));
+							});
+						</script>
+					</div>
+					<div style = "display:flex;">
+						<input class="form-control" type="text" placeholder="64" id = "input_tileWidth">
+						<input class="form-control" type="text" placeholder="64" id = "input_tileHeight">
+						<button type="button" class="btn btn-success btn-sm" id = "btn_changeTILESIZE">SET SIZE</button>
+						<script>
+							document.getElementById('btn_changeTILESIZE').addEventListener('click', 
+							function(event){
+								switchingTileSize(parseInt(document.getElementById("input_tileWidth").value), parseInt(document.getElementById("input_tileHeight").value));
+							});
+						</script>
+					</div>
 					<div class="custom-control custom-checkbox">
   						<input type="checkbox" class="custom-control-input" id="customCheck1" checked>
   						<label class="custom-control-label" for="customCheck1">Show Grid</label>
+						<script>
+							document.getElementById('customCheck1').addEventListener('click', 
+							function(event){
+								if(event.target.checked==false){
+										$('.cells').css({
+   										"background-color": "white",
+    									"width": sizeWidth.toString()+"px",
+										"height": sizeHeight.toString()+"px",
+										"border": "0px black solid"
+										});
+								}
+								else{
+										$('.cells').css({
+    									"background-color": "white",
+    									"width": sizeWidth.toString()+"px",
+										"height": sizeHeight.toString()+"px",
+										"border": "1px black solid"
+										});
+								}
+							})
+						</script>
 					</div>
 				</div>
 			</div>
