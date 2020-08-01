@@ -8,7 +8,7 @@
     <script src="./scripts/statemachine.js"></script>
 	<script src="./scripts/UI.js"></script>
     <script>
-	var newKilled = -1;
+	//var newKilled = -1;
     var config = {
         type: Phaser.AUTO,
         width: 1320,
@@ -95,7 +95,6 @@
         this.keys = this.input.keyboard.addKeys('A, D, W, S, SPACE');
 		this.cameras.main.setSize(1320, 700);
 		this.cameras.main.startFollow(this.player.body, true);
-        //this.stateMachine = new StateMachine('idle', {idle: new IdleState(), move: new MoveState(), swing: new SwingState()}, [this, this.player]); 
     }
 
     function update()

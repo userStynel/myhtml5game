@@ -1,3 +1,47 @@
+function setHitBoxPosition(hero)
+{
+	var height, width, x, y;
+	if(hero.direction == 'left')
+	{
+		height = 96;
+		width = 30;
+		x = hero.body.x-width;
+		y = hero.body.y-((height-hero.body.height)/2);
+	}
+	else if(hero.direction == 'right')
+	{
+		height = 96;
+		width = 30;
+		x = hero.body.x+hero.body.width;
+		y = hero.body.y-((height-hero.body.height)/2);
+	}
+	else if(hero.direction == 'up')
+	{
+		height = 30;
+		width = 96;
+		x = hero.body.x -((width-hero.body.width)/2);
+		y = hero.body.y-height;
+	}
+	else if(hero.direction == 'down')
+	{
+		height = 30;
+		width = 96;
+		x = hero.body.x-((width-hero.body.width)/2);
+		y = hero.body.y+hero.body.height;
+	}
+	hero.HITBOX.setPosition(x, y);
+	hero.HITBOX.setDisplaySize(width, height);
+	
+}
+
+function healthBarFollowObject(monster)
+{
+	monster.healthbar.background.setX(monster.body.x+monster.body.width/2-47);
+	monster.healthbar.gauge.setX(monster.body.x+monster.body.width/2-47+90);
+	monster.healthbar.background.setY(monster.body.y-15);
+	monster.healthbar.gauge.setY(monster.body.y-13);
+}
+
 function searchingMonster(scene, HITBOX)
 {
 	for(var i = 0; i<scene.monsterlist.length; i++)
@@ -7,25 +51,7 @@ function searchingMonster(scene, HITBOX)
 			scene.monsterlist[i].minusHealth();
 			scene.monsterlist[i].healthbar.gauge.fillRect(0, 0, -86*(100+50*(scene.monsterlist[i].status == 2)-scene.monsterlist[i].health)/(100+50*(scene.monsterlist[i].status == 2)), 12);
 			scene.monsterlist[i].body.setX(scene.monsterlist[i].body.x-5.5*Math.cos(scene.monsterlist[i].direction));
-		scene.monsterlist[i].body.setY(scene.monsterlist[i].body.y-5.5*Math.sin(scene.monsterlist[i].direction));
-			/*
-			if(scene.monsterlist[i].health <= 0)
-			{
-				if(scene.monsterlist[i].body.texture.key == 'newslime')
-				{
-					var save = i;
-					scene.monsterlist[save].body.anims.play('newslime-dead');
-					scene.monsterlist[save].body.once('animationcomplete', () => {alert(save); newKilled = save;});
-				}
-				else
-				{
-				scene.monsterlist[i].body.destroy();
-				scene.monsterlist[i].healthbar.background.destroy();
-				scene.monsterlist[i].healthbar.gauge.destroy();
-				scene.monsterlist.splice(i, 1);
-				}
-			}
-			*/
+			scene.monsterlist[i].body.setY(scene.monsterlist[i].body.y-5.5*Math.sin(scene.monsterlist[i].direction));
 		}
 	}	
 }
@@ -142,40 +168,9 @@ class SwingState extends State
 		var x, y, height, width;
 		hero.body.setVelocityX(0);
 		scene.actingQueue.push(hero);
-		if(hero.direction == 'left')
-		{
-			height = 96;
-			width = 30;
-			x = hero.body.x-width;
-			y = hero.body.y-((height-hero.body.height)/2);
-		}
-		else if(hero.direction == 'right')
-		{
-			height = 96;
-			width = 30;
-			x = hero.body.x+hero.body.width;
-			y = hero.body.y-((height-hero.body.height)/2);
-		}
-		else if(hero.direction == 'up')
-		{
-			height = 30;
-			width = 96;
-			x = hero.body.x -((width-hero.body.width)/2);
-			y = hero.body.y-height;
-		}
-		else if(hero.direction == 'down')
-		{
-			height = 30;
-			width = 96;
-			x = hero.body.x-((width-hero.body.width)/2);
-			y = hero.body.y+hero.body.height;
-		}
+		setHitBoxPosition(hero);
 		hero.body.anims.play('attack_'+hero.direction);
-		hero.HITBOX.setPosition(x, y);
-		hero.HITBOX.setDisplaySize(width, height);
-		//HitBox.anims.play('hiteffectmotion');
 		searchingMonster(scene, hero.HITBOX);
-		//HitBox.once('animationcomplete', () => {HitBox.destroy();});
         hero.body.once('animationcomplete', () => {this.stateMachine.transistion('idle');});
 	}
 }
@@ -220,13 +215,10 @@ class MonsterChasingState extends State
 		//scene.actingQueue.push(monster);
 		monster.direction = Phaser.Math.Angle.Between(monster.body.x+monster.body.width/2, monster.body.y+monster.body.height/2,scene.player.body.x+scene.player.body.width/2, scene.player.body.y+scene.player.body.height/2);
 		monster.body.anims.play(monster.body.texture.key+'-idle', true);
-		monster.body.setX(monster.body.x+0.1*Math.cos(monster.direction));
-		monster.body.setY(monster.body.y+0.1*Math.sin(monster.direction));
+		monster.body.setX(monster.body.x+0.3*Math.cos(monster.direction));
+		monster.body.setY(monster.body.y+0.3*Math.sin(monster.direction));
 		
-		monster.healthbar.background.setX(monster.body.x+monster.body.width/2-47);
-		monster.healthbar.gauge.setX(monster.body.x+monster.body.width/2-47+90);
-		monster.healthbar.background.setY(monster.body.y-15);
-		monster.healthbar.gauge.setY(monster.body.y-13);
+		healthBarFollowObject(monster);
 		if(monster.health <= 0)
 			this.stateMachine.transistion('dead');
 		else if(Phaser.Math.Distance.Between(scene.player.body.x+scene.player.body.width/2, scene.player.body.y+scene.player.body.height/2, monster.body.x+monster.body.width/2, monster.body.y+monster.body.height/2)>130)
@@ -256,10 +248,7 @@ class MonsterRunState extends State
 		monster.body.setX(monster.body.x-0.1*Math.cos(monster.direction));
 		monster.body.setY(monster.body.y-0.1*Math.sin(monster.direction));
 		
-		monster.healthbar.background.setX(monster.body.x+monster.body.width/2-47);
-		monster.healthbar.gauge.setX(monster.body.x+monster.body.width/2-47+90);
-		monster.healthbar.background.setY(monster.body.y-15);
-		monster.healthbar.gauge.setY(monster.body.y-13);
+		healthBarFollowObject(monster);
 		if(monster.health <= 0)
 			this.stateMachine.transistion('dead');
 		else if(Phaser.Math.Distance.Between(scene.player.body.x+scene.player.body.width/2, scene.player.body.y+scene.player.body.height/2, monster.body.x+monster.body.width/2, monster.body.y+monster.body.height/2)>130)

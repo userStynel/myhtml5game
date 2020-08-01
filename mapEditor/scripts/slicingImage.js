@@ -243,6 +243,7 @@ function switchingMapSize(new_Garo, new_Sero)
 			}
 		}
 	}
+	/*
 	else if(new_Garo > numGaro && new_Sero <= numSero)
 	{
 		alert("love yukika");
@@ -255,6 +256,7 @@ function switchingMapSize(new_Garo, new_Sero)
 	{
 		alert("test");
 	}
+	*/
 	$('.cells').css({
     "background-color": "white",
     "width": sizeWidth.toString()+"px",

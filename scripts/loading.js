@@ -1,12 +1,11 @@
 function loadMonsterIMG(scene)
 {
-	scene.load.image('redmonster', './assets/MONSTER/red_monster.png');
-	scene.load.spritesheet('tank', './assets/MONSTER/underground-mini-tank.png',{frameWidth: 64, frameHeight: 64});
+	scene.load.spritesheet('tank', './assets/MONSTER/tank.png',{frameWidth: 64, frameHeight: 64});
 	scene.load.spritesheet('tank-deadmotion', './assets/MONSTER/tank-deadmotion.png',{frameWidth: 64, frameHeight: 64});
-	scene.load.spritesheet('newslime', './assets/MONSTER/newSlime.png',{frameWidth: 64, frameHeight: 50});
-	scene.load.spritesheet('newslime-deadmotion', './assets/MONSTER/Slime-DeadMotion.png', {frameWidth: 64, frameHeight: 50});
-	scene.load.spritesheet('greenmonster','./assets/MONSTER/greenmonster.png', {frameWidth: 64, frameHeight: 64});
-	scene.load.spritesheet('greenmonster-deadmotion','./assets/MONSTER/greenmonster-deadmotion.png', {frameWidth: 64, frameHeight: 64});
+	scene.load.spritesheet('cubeSlime', './assets/MONSTER/cubeSlime.png',{frameWidth: 64, frameHeight: 50});
+	scene.load.spritesheet('cubeSlime-deadmotion', './assets/MONSTER/cubeSlime-deadmotion.png', {frameWidth: 64, frameHeight: 50});
+	scene.load.spritesheet('greenMonster','./assets/MONSTER/greenMonster.png', {frameWidth: 64, frameHeight: 64});
+	scene.load.spritesheet('greenMonster-deadmotion','./assets/MONSTER/greenMonster-deadmotion.png', {frameWidth: 64, frameHeight: 64});
 }
 
 function loadNPCImg(scene)
@@ -17,8 +16,8 @@ function loadNPCImg(scene)
 
 function loadUIImg(scene)
 {
-	scene.load.image('heart', './assets/hb.png');
-	scene.load.image('monsterhealthbar', './assets/MonsterHealthBar.png');
+	scene.load.image('heart', './assets/UI/hb.png');
+	scene.load.image('monsterhealthbar', './assets/UI/MonsterHealthBar.png');
 	//scene.load.spritesheet('hiteffect', './assets/hitmotion.png', {frameWidth: 86, frameHeight: 20});
 }
 
@@ -30,13 +29,12 @@ function loadMapIMG(scene)
 
 function loadImages(scene)
 {
-	// 이미지를 로드합니다
 	loadMonsterIMG(scene);
 	loadNPCImg(scene);
 	loadUIImg(scene);
 	loadMapIMG(scene);
-    scene.load.spritesheet('character_anim', './assets/as.png', { frameWidth: 64, frameHeight: 64});
-    scene.load.spritesheet('attacking_pic', './assets/as_attacking.png', {frameWidth: 64, frameHeight: 64});
+    scene.load.spritesheet('mainCharacter', './assets/mainCharacter.png', { frameWidth: 64, frameHeight: 64});
+    scene.load.spritesheet('mainCharacter-attackmotion', './assets/mainCharacter-attackmotion.png', {frameWidth: 64, frameHeight: 64});
 }
 
 function loadAnimation(scene)
@@ -44,73 +42,73 @@ function loadAnimation(scene)
 	// 애니메이션을 로드합니다
 	scene.anims.create({
         key: 'idle-down',
-        frames: scene.anims.generateFrameNumbers('character_anim', { start: 0, end: 1 }),
+        frames: scene.anims.generateFrameNumbers('mainCharacter', { start: 0, end: 1 }),
         frameRate: 3,
         repeat: -1
         });
     scene.anims.create({
         key: 'idle-up',
-        frames: scene.anims.generateFrameNumbers('character_anim', { start: 11, end: 12}),
+        frames: scene.anims.generateFrameNumbers('mainCharacter', { start: 11, end: 12}),
         frameRate: 3,
         repeat: -1
         });
     scene.anims.create({
         key: 'idle-right',
-        frames: scene.anims.generateFrameNumbers('character_anim', { start: 17, end: 18}),
+        frames: scene.anims.generateFrameNumbers('mainCharacter', { start: 17, end: 18}),
         frameRate: 3,
         repeat: -1
         });
     scene.anims.create({
         key: 'idle-left',
-        frames: scene.anims.generateFrameNumbers('character_anim', { start: 19, end: 20}),
+        frames: scene.anims.generateFrameNumbers('mainCharacter', { start: 19, end: 20}),
         frameRate: 3,
         repeat: -1
         });
     scene.anims.create({
         key: 'walking-down',
-        frames: scene.anims.generateFrameNumbers('character_anim', { start: 2, end: 6 }),
+        frames: scene.anims.generateFrameNumbers('mainCharacter', { start: 2, end: 6 }),
         frameRate: 10,
         repeat: -1
         });
     scene.anims.create({
         key: 'walking-up',
-        frames: scene.anims.generateFrameNumbers('character_anim', { start: 7, end: 11 }),
+        frames: scene.anims.generateFrameNumbers('mainCharacter', { start: 7, end: 11 }),
         frameRate: 10,
         repeat: -1
         });
     scene.anims.create({
         key: 'walking-right',
-        frames: scene.anims.generateFrameNumbers('character_anim', { start: 13, end: 14 }),
+        frames: scene.anims.generateFrameNumbers('mainCharacter', { start: 13, end: 14 }),
         frameRate: 10,
         repeat: -1
         });
     scene.anims.create({
         key: 'walking-left',
-        frames: scene.anims.generateFrameNumbers('character_anim', { start: 15, end: 16 }),
+        frames: scene.anims.generateFrameNumbers('mainCharacter', { start: 15, end: 16 }),
         frameRate: 10,
         repeat: -1
         });
 	scene.anims.create({
         key: 'attack_up',
-        frames: scene.anims.generateFrameNumbers('attacking_pic', { start: 5, end: 9}),
+        frames: scene.anims.generateFrameNumbers('mainCharacter-attackmotion', { start: 5, end: 9}),
         frameRate: 11,
         repeat: 0
         });
 	scene.anims.create({
         key: 'attack_down',
-        frames: scene.anims.generateFrameNumbers('attacking_pic', { start: 0, end: 4 }),
+        frames: scene.anims.generateFrameNumbers('mainCharacter-attackmotion', { start: 0, end: 4 }),
         frameRate: 11,
         repeat: 0
         });
     scene.anims.create({
         key: 'attack_left',
-        frames: scene.anims.generateFrameNumbers('attacking_pic', { start: 13, end: 15 }),
+        frames: scene.anims.generateFrameNumbers('mainCharacter-attackmotion', { start: 13, end: 15 }),
         frameRate: 11,
         repeat: 0
         });
     scene.anims.create({
         key: 'attack_right',
-        frames: scene.anims.generateFrameNumbers('attacking_pic', { start: 10, end: 12 }),
+        frames: scene.anims.generateFrameNumbers('mainCharacter-attackmotion', { start: 10, end: 12 }),
         frameRate: 11,
         repeat: 0
         });
@@ -127,8 +125,8 @@ function loadAnimation(scene)
         repeat: -1
         });
 	 scene.anims.create({
-        key: 'greenmonster-idle',
-        frames: scene.anims.generateFrameNumbers('greenmonster', { start: 0, end:2}),
+        key: 'greenMonster-idle',
+        frames: scene.anims.generateFrameNumbers('greenMonster', { start: 0, end:2}),
         frameRate: 5,
         repeat: -1
         });
@@ -139,21 +137,21 @@ function loadAnimation(scene)
         repeat: -1
         });
 	 scene.anims.create({
-        key: 'newslime-idle',
-        frames: scene.anims.generateFrameNumbers('newslime', { start: 0, end:2}),
+        key: 'cubeSlime-idle',
+        frames: scene.anims.generateFrameNumbers('cubeSlime', { start: 0, end:2}),
         frameRate: 3,
         repeat: -1
         });
 	scene.anims.create({
-        key: 'newslime-dead',
-        frames: scene.anims.generateFrameNumbers('newslime-deadmotion', { start: 0, end:4}),
+        key: 'cubeSlime-dead',
+        frames: scene.anims.generateFrameNumbers('cubeSlime-deadmotion', { start: 0, end:4}),
         frameRate: 5,
         repeat: 0
         });
 	
 	scene.anims.create({
-        key: 'greenmonster-dead',
-        frames: scene.anims.generateFrameNumbers('greenmonster-deadmotion', { start: 0, end:4}),
+        key: 'greenMonster-dead',
+        frames: scene.anims.generateFrameNumbers('greenMonster-deadmotion', { start: 0, end:4}),
         frameRate: 5,
         repeat: 0
         });
@@ -169,17 +167,10 @@ function loadAnimation(scene)
         frameRate: 5,
         repeat: 0
         });
-	 /*scene.anims.create({
-        key: 'hiteffectmotion',
-        frames: scene.anims.generateFrameNumbers('hiteffect', { start: 0, end:2}),
-        frameRate: 15,
-        repeat: 0
-        }); */
 }
 
 function loadMap(scene)
 {
-	// 맵을 로드합니다
 	scene.map = scene.make.tilemap({key: 'map', tileWidth:64, tileHeight:64});
 	scene.tileImages = scene.map.addTilesetImage("tiles");
 	scene.map.createStaticLayer(0, scene.tileImages, 0, 80);
@@ -187,7 +178,6 @@ function loadMap(scene)
 
 function loadNPC(NPClist, scene)
 {
-	// NPC를 로드합니다
 	NPClist.push(scene.physics.add.sprite(600, 600, 'rabbit'));
 	NPClist.push(scene.physics.add.sprite(300, 600, 'vendor'));
 	
@@ -206,9 +196,9 @@ function loadMonster(Monlist, scene)
 	for(var i = 0; i<13; i++)
 	{
 		if(i%3==0)
-			texture = 'greenmonster';
+			texture = 'greenMonster';
 		else if(i%3 == 1)
-			texture = 'newslime';
+			texture = 'cubeSlime';
 		else
 			texture = 'tank';
 		Monlist.push(new Monster(70*(i+3), 70*(i+3), scene, texture));
