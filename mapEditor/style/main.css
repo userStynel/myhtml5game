@@ -1,0 +1,68 @@
+header
+{
+	padding-top: 15px;
+	padding-left: 15px;
+}
+article
+{
+	display:flex;
+}
+
+#left-content, #right-content
+{
+	padding-left:25px;
+}
+
+.line
+{
+	display: flex;
+}
+
+.cells img, .object_wrapper img
+{
+	position: absolute;
+}
+
+.tile
+{
+	z-index: 1;
+}
+
+.monster, .asset
+{
+	z-index: 2;
+}
+
+.page.notselected
+{
+	display:none;
+}
+
+.object-wrapper.notselected
+{
+	border: 3px gray dashed;
+	padding: 3px;
+	margin: 3px;
+}
+
+.object-wrapper.selected
+{
+	border: 3px black dashed;
+	padding: 3px;
+	margin: 3px;
+}
+
+.object-wrapper:hover
+{
+	border-color: black;
+}
+
+
+#opt
+{
+	margin-bottom: 5px;
+}
+#opt *
+{
+	margin-right:15px;
+}

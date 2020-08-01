@@ -97,6 +97,21 @@ var server = http.createServer(function(request, response){
 			}
 		});
 	}
+	else if(resource.indexOf('/TME') == 0 || resource.indexOf('/tme') == 0)
+	{
+		fs.readFile('./mapEditor/newmapEditor.html', function(error, data){
+			if(error)
+			{
+				response.writeHead(500, {'Content-Type':'text/html'});
+				response.end('500 Internal Server ' + error);
+			}
+			else
+			{
+				response.writeHead(200, {'Content-Type':'text/html'});
+				response.end(data);
+			}
+		});
+	}
 	else if(resource.indexOf('/mapEditor/') == 0)
 	{
 		var resourcePath = resource.substring(1);

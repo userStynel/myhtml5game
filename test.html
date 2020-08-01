@@ -8,6 +8,7 @@
     <script src="./scripts/statemachine.js"></script>
 	<script src="./scripts/UI.js"></script>
     <script>
+	var newKilled = -1;
     var config = {
         type: Phaser.AUTO,
         width: 1320,
@@ -15,14 +16,15 @@
         physics: {
             default: 'arcade',
             arcade: {
-                gravity: { y: 0 }
+                gravity: { y: 0 },
+				//debug: true
             }
         },
         scene: {
             preload: preload,
             create: create,
             update: update
-        }
+        },
     };
 
     var game = new Phaser.Game(config);
@@ -40,7 +42,7 @@
 			this.health = 100;
 			this.status = 1;
 			this.direction = 0;
-			this.stateMachine = new StateMachine('idle', {idle: new MonsterIdleState(), chasing: new MonsterChasingState(), running: new MonsterRunState()}, [scene, this]); 
+			this.stateMachine = new StateMachine('idle', {idle: new MonsterIdleState(), chasing: new MonsterChasingState(), running: new MonsterRunState(), dead: new MonsterDeadState()}, [scene, this]); 
 			
 		}
 		minusHealth()
@@ -67,10 +69,13 @@
 		constructor(x, y, scene)
 		{
 			this.body = scene.physics.add.sprite(x, y, 'character_anim');
+			this.HITBOX = scene.physics.add.sprite(x, y, null);
+			this.HITBOX.setOrigin(0, 0);
+			this.HITBOX.setVisible(false);
 			this.body.setOrigin(0, 0);
 			this.body.setDebug(true, true, '0xDDF3F5');
-			this.body.setDebugBodyColor('0xDDF3F5');
 			this.health = 333;
+			this.stateMachine = new StateMachine('idle', {idle: new IdleState(), move: new MoveState(), swing: new SwingState()}, [scene, this]); 
 		}
 	}
 		
@@ -81,26 +86,35 @@
 
     function create ()
     {
+		this.actingQueue = [];
 		createUI(this);
 		loadAnimation(this);
 		loadMap(this);
 		loadObjects(this);
 		this.health = 333;
         this.keys = this.input.keyboard.addKeys('A, D, W, S, SPACE');
-        this.stateMachine = new StateMachine('idle', {idle: new IdleState(), move: new MoveState(), swing: new SwingState()}, [this, this.player]); 
+		this.cameras.main.setSize(1320, 700);
+		this.cameras.main.startFollow(this.player.body, true);
+        //this.stateMachine = new StateMachine('idle', {idle: new IdleState(), move: new MoveState(), swing: new SwingState()}, [this, this.player]); 
     }
 
     function update()
     {
-        this.stateMachine.step();
+		this.player.stateMachine.step();
+		console.log(this.monsterlist.length);
 		for(var i = 0; i<this.monsterlist.length; i++)
 		{
-			this.monsterlist[i].healthbar.background.setX(this.monsterlist[i].body.x+this.monsterlist[i].body.width/2-47);
-			this.monsterlist[i].healthbar.gauge.setX(this.monsterlist[i].body.x+this.monsterlist[i].body.width/2-47+90);
-			this.monsterlist[i].healthbar.background.setY(this.monsterlist[i].body.y-15);
-			this.monsterlist[i].healthbar.gauge.setY(this.monsterlist[i].body.y-13);
 			this.monsterlist[i].stateMachine.step();
 		}
+		
+		/*
+		console.log(this.actingQueue.length);
+		if(this.actingQueue.length != 0)
+		{
+			this.actingQueue[0].stateMachine.step();
+			this.actingQueue.shift();
+		}
+		*/
     }
     </script>
 </body>

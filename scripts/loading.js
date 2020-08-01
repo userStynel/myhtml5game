@@ -2,14 +2,17 @@ function loadMonsterIMG(scene)
 {
 	scene.load.image('redmonster', './assets/MONSTER/red_monster.png');
 	scene.load.spritesheet('tank', './assets/MONSTER/underground-mini-tank.png',{frameWidth: 64, frameHeight: 64});
+	scene.load.spritesheet('tank-deadmotion', './assets/MONSTER/tank-deadmotion.png',{frameWidth: 64, frameHeight: 64});
 	scene.load.spritesheet('newslime', './assets/MONSTER/newSlime.png',{frameWidth: 64, frameHeight: 50});
+	scene.load.spritesheet('newslime-deadmotion', './assets/MONSTER/Slime-DeadMotion.png', {frameWidth: 64, frameHeight: 50});
 	scene.load.spritesheet('greenmonster','./assets/MONSTER/greenmonster.png', {frameWidth: 64, frameHeight: 64});
+	scene.load.spritesheet('greenmonster-deadmotion','./assets/MONSTER/greenmonster-deadmotion.png', {frameWidth: 64, frameHeight: 64});
 }
 
 function loadNPCImg(scene)
 {
 	scene.load.spritesheet('rabbit', './assets/NPC/rabbit.png',  { frameWidth: 128, frameHeight: 128});
-	scene.load.spritesheet('vendor', './assets/NPC/vendor.png', {frameWidth: 64, frameHeight: 64});
+	scene.load.spritesheet('vendor', './assets/NPC/VENDOR.png', {frameWidth: 64, frameHeight: 64});
 }
 
 function loadUIImg(scene)
@@ -113,7 +116,7 @@ function loadAnimation(scene)
         });
     scene.anims.create({
         key: 'idle2_left',
-        frames: scene.anims.generateFrameNumbers('vendor', { start: 0, end: 4 }),
+        frames: scene.anims.generateFrameNumbers('vendor', { start: 0, end: 1 }),
         frameRate: 5,
         repeat: -1
         });
@@ -141,11 +144,30 @@ function loadAnimation(scene)
         frameRate: 3,
         repeat: -1
         });
+	scene.anims.create({
+        key: 'newslime-dead',
+        frames: scene.anims.generateFrameNumbers('newslime-deadmotion', { start: 0, end:4}),
+        frameRate: 5,
+        repeat: 0
+        });
+	
+	scene.anims.create({
+        key: 'greenmonster-dead',
+        frames: scene.anims.generateFrameNumbers('greenmonster-deadmotion', { start: 0, end:4}),
+        frameRate: 5,
+        repeat: 0
+        });
 	 scene.anims.create({
         key: 'tank-idle',
         frames: scene.anims.generateFrameNumbers('tank', { start: 0, end:1}),
         frameRate: 7,
         repeat: -1
+        });
+		 scene.anims.create({
+        key: 'tank-dead',
+        frames: scene.anims.generateFrameNumbers('tank-deadmotion', { start: 0, end:4}),
+        frameRate: 5,
+        repeat: 0
         });
 	 /*scene.anims.create({
         key: 'hiteffectmotion',
@@ -161,7 +183,6 @@ function loadMap(scene)
 	scene.map = scene.make.tilemap({key: 'map', tileWidth:64, tileHeight:64});
 	scene.tileImages = scene.map.addTilesetImage("tiles");
 	scene.map.createStaticLayer(0, scene.tileImages, 0, 80);
-	scene.map.setCollision(1);
 }
 
 function loadNPC(NPClist, scene)
@@ -204,6 +225,7 @@ function loadMonster(Monlist, scene)
 										scene.headerUI.heartBar.fillRect(0, 0, scene.health-333, 48);
 									}
 								   });
+		scene.actingQueue.push(Monlist[i]);
 	}
 }
 
@@ -225,10 +247,11 @@ function dialogue(name)
 
 function loadPlayer(scene)
 {
-	scene.player = new Player(128, 256, scene);
+	scene.player = new Player(128, 256+80, scene);
 	scene.player.direction = "down";
 	scene.player.body.setCollideWorldBounds(true); 
 	scene.player.body.anims.play('idle-'+scene.player.direction, true); 
+	scene.actingQueue.push(scene.player);
 }
 
 function loadObjects(scene)
@@ -238,6 +261,4 @@ function loadObjects(scene)
 	loadMonster(scene.monsterlist, scene);
 	scene.NPClist = new Array();
 	loadNPC(scene.NPClist, scene);
-	
-	//scene.physics.add.collider(scene.player.body, scene.map.layer, function(){alert("dasd");});
 }

@@ -245,7 +245,11 @@ function switchingMapSize(new_Garo, new_Sero)
 	}
 	else if(new_Garo > numGaro && new_Sero <= numSero)
 	{
-		alert("test");
+		alert("love yukika");
+	 	for(var i=numGaro; i<new_Garo; i++)
+		{
+			
+		}
 	}
 	else if(new_Garo <= numGaro && new_Sero > numSero)
 	{
