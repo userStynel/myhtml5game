@@ -18,13 +18,14 @@ function loadUIImg(scene)
 {
 	scene.load.image('heart', './assets/UI/hb.png');
 	scene.load.image('monsterhealthbar', './assets/UI/MonsterHealthBar.png');
-	//scene.load.spritesheet('hiteffect', './assets/hitmotion.png', {frameWidth: 86, frameHeight: 20});
+	scene.load.image('heart-poison', './assets/UI/hb-poison.png');
+	scene.load.image('dialogBox', './assets/UI/dialogueBox.png');
 }
 
 function loadMapIMG(scene)
 {
 	scene.load.image('tiles', './assets/tile/tileset.png');
-    scene.load.tilemapCSV('map', './assets/tile/map.csv');
+	scene.load.tilemapTiledJSON('map', './assets/tile/map.json');
 }
 
 function loadImages(scene)
@@ -35,6 +36,7 @@ function loadImages(scene)
 	loadMapIMG(scene);
     scene.load.spritesheet('mainCharacter', './assets/mainCharacter.png', { frameWidth: 64, frameHeight: 64});
     scene.load.spritesheet('mainCharacter-attackmotion', './assets/mainCharacter-attackmotion.png', {frameWidth: 64, frameHeight: 64});
+	scene.load.spritesheet('mainCharacter-poison', './assets/mainCharacter-poison.png', {frameWidth: 64, frameHeight: 64});
 }
 
 function loadAnimation(scene)
@@ -88,6 +90,56 @@ function loadAnimation(scene)
         frameRate: 10,
         repeat: -1
         });
+	
+	scene.anims.create({
+        key: 'idle-down-poison',
+        frames: scene.anims.generateFrameNumbers('mainCharacter-poison', { start: 0, end: 1 }),
+        frameRate: 3,
+        repeat: -1
+        });
+    scene.anims.create({
+        key: 'idle-up-poison',
+        frames: scene.anims.generateFrameNumbers('mainCharacter-poison', { start: 11, end: 12}),
+        frameRate: 3,
+        repeat: -1
+        });
+    scene.anims.create({
+        key: 'idle-right-poison',
+        frames: scene.anims.generateFrameNumbers('mainCharacter-poison', { start: 17, end: 18}),
+        frameRate: 3,
+        repeat: -1
+        });
+    scene.anims.create({
+        key: 'idle-left-poison',
+        frames: scene.anims.generateFrameNumbers('mainCharacter-poison', { start: 19, end: 20}),
+        frameRate: 3,
+        repeat: -1
+        });
+    scene.anims.create({
+        key: 'walking-down-poison',
+        frames: scene.anims.generateFrameNumbers('mainCharacter-poison', { start: 2, end: 6 }),
+        frameRate: 10,
+        repeat: -1
+        });
+    scene.anims.create({
+        key: 'walking-up-poison',
+        frames: scene.anims.generateFrameNumbers('mainCharacter-poison', { start: 7, end: 11 }),
+        frameRate: 10,
+        repeat: -1
+        });
+    scene.anims.create({
+        key: 'walking-right-poison',
+        frames: scene.anims.generateFrameNumbers('mainCharacter-poison', { start: 13, end: 14 }),
+        frameRate: 10,
+        repeat: -1
+        });
+    scene.anims.create({
+        key: 'walking-left-poison',
+        frames: scene.anims.generateFrameNumbers('mainCharacter-poison', { start: 15, end: 16 }),
+        frameRate: 10,
+        repeat: -1
+        });
+	
 	scene.anims.create({
         key: 'attack_up',
         frames: scene.anims.generateFrameNumbers('mainCharacter-attackmotion', { start: 5, end: 9}),
@@ -171,9 +223,22 @@ function loadAnimation(scene)
 
 function loadMap(scene)
 {
-	scene.map = scene.make.tilemap({key: 'map', tileWidth:64, tileHeight:64});
-	scene.tileImages = scene.map.addTilesetImage("tiles");
-	scene.map.createStaticLayer(0, scene.tileImages, 0, 80);
+	scene.map = scene.make.tilemap({key: 'map'});
+	scene.tileImages = scene.map.addTilesetImage("dungeon", "tiles");
+	scene.worldLayer = scene.map.createStaticLayer('IAM', scene.tileImages, 0, 80);
+	scene.worldLayer.setCollision([1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+	scene.anomalyTile = [];
+	for(var i = 0; i<scene.worldLayer.layer.data.length; i++)
+	{
+		for(var j=0; j<scene.worldLayer.layer.data[i].length; j++)
+		{
+			if(scene.worldLayer.layer.data[i][j].index == 16 || (scene.worldLayer.layer.data[i][j].index >= 17 && scene.worldLayer.layer.data[i][j].index <= 20))
+				scene.anomalyTile.push(scene.worldLayer.layer.data[i][j]);
+		}
+	}
+	console.log(scene.anomalyTile);
+	console.log(scene.map.layer);
+	console.log(scene.worldLayer);
 }
 
 function loadNPC(NPClist, scene)
@@ -182,18 +247,18 @@ function loadNPC(NPClist, scene)
 	NPClist.push(scene.physics.add.sprite(300, 600, 'vendor'));
 	
 	NPClist[1].setInteractive();
-    NPClist[1].on('pointerdown', function(){dialogue("vendor")});
+    NPClist[1].on('pointerdown', function(){dialogue(NPClist[1], scene)});
 	NPClist[1].anims.play('idle2_left', true);
 	
     NPClist[0].setInteractive();
-    NPClist[0].on('pointerdown', function(){dialogue("rabbit")});
+    NPClist[0].on('pointerdown', function(){dialogue(NPClist[0], scene)});
 	NPClist[0].anims.play('rabbit_idle', true);
 }
 
 function loadMonster(Monlist, scene)
 {
 	var texture;
-	for(var i = 0; i<13; i++)
+	for(var i = 0; i<9; i++)
 	{
 		if(i%3==0)
 			texture = 'greenMonster';
@@ -201,38 +266,52 @@ function loadMonster(Monlist, scene)
 			texture = 'cubeSlime';
 		else
 			texture = 'tank';
-		Monlist.push(new Monster(70*(i+3), 70*(i+3), scene, texture));
-		scene.physics.add.collider(scene.player.body, Monlist[i].body, function()
+		Monlist.push(new Monster(70*(i+4), 70*(i+4), scene, texture));
+		//scene.physics.add.collider(scene.worldLayer, Monlist[i].body, function(){console.log("monster-a");});
+		//scene.physics.add.collider(scene.player.HITBOX, Monlist[i].body, function(){console.log("yukikiaaaaa");});
+		scene.physics.add.collider(scene.player.body, Monlist[i].body, function(object1, object2)
 								   {
-									if(scene.health <=0)
+									object1.body.setVelocity(0);
+									object2.body.setVelocity(0);
+									if(scene.player.health <=0)
 									{alert("Legend is never die");} 
 									else
 									{
-										if(scene.health>=30)
-										{scene.health -= 2;}
+										if(scene.player.health>=30)
+										{scene.player.health -= 2;}
 										else
-										{scene.health = 0;}
-										scene.headerUI.heartBar.fillRect(0, 0, scene.health-333, 48);
+										{scene.player.health = 0;}
+										scene.headerUI.heartBar.fillRect(0, 0, scene.player.health-333, 48);
 									}
 								   });
-		scene.actingQueue.push(Monlist[i]);
 	}
 }
 
-function dialogue(name)
+function dialogue(obj, scene)
 {
-    var rand = Math.floor(Math.random()*2);
-    if(name == "vendor")
-        alert("Hi! I'm Vender, Do you interested in my stuff?");
-    else if(name == "rabbit")
-    {
-        if(rand == 0)
-            alert("Hi I'm taking Giant Rabbit from weird world!");
-        else if(rand == 1)
-            alert("I love you so Much!");
-    }
-	else if(name == "ninja")
-		alert("Hi! I'm NINJA!");
+	if(obj.dialogueBox == undefined)
+	{
+		var t;
+		if(obj.texture.key == 'rabbit')
+			t = 'Hello Weird World!';
+		else
+		{
+			if(scene.player.body.poison == true)
+				t = 'You need DETOX';
+			else
+				t = 'I wanna help you';
+		}
+		obj.dialogueBox =  scene.add.sprite(obj.body.x+obj.body.width/2, obj.body.y+obj.body.height/2, 'dialogBox');
+		obj.dialogueBox.setOrigin(0, 0);
+		obj.txt = scene.add.text(obj.dialogueBox.x+30, obj.dialogueBox.y+50, t);
+	}
+	else
+	{
+		obj.dialogueBox.destroy();
+		obj.txt.destroy();
+		delete obj.dialogueBox;
+		delete obj.txt;
+	}
 }
 
 function loadPlayer(scene)
@@ -240,8 +319,6 @@ function loadPlayer(scene)
 	scene.player = new Player(128, 256+80, scene);
 	scene.player.direction = "down";
 	scene.player.body.setCollideWorldBounds(true); 
-	scene.player.body.anims.play('idle-'+scene.player.direction, true); 
-	scene.actingQueue.push(scene.player);
 }
 
 function loadObjects(scene)

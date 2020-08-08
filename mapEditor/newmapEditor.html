@@ -17,10 +17,9 @@
 			var tileImage = new Image();
 			tileImage.src = './assets/tile/tileset.png';
 			tileImage.onload = function(){cutImageUp(tileImage, tileList, sizeWidth, sizeHeight); makingTileSet();}
-			var assetImage = new Image();
 		</script>
 		<header>
-			<h2>TILE MAP EDITOR V2 <a href = "https://twitter.com/Lostynel"><img src = "./mapEditor/icon/twitter_icon.png"></a> 
+			<h2 style = "font-family: 'Black Han Sans', sans-serif;">TILE MAP EDITOR V2 <a href = "https://twitter.com/Lostynel"><img src = "./mapEditor/icon/twitter_icon.png"></a> 
 			<a href = "https://blog.naver.com/ltnyst10"><img src = "./mapEditor/icon/blog_icon.png"></a></h2>
 		</header>
 		<hr>
@@ -31,9 +30,10 @@
 						 <div class="input-group-prepend">
     						<span class="input-group-text">MAPSIZE</span>
   						</div>
-  						<input type="text" class="form-control" placeholder="11">
+  						<input type="text" class="form-control" placeholder="height">
+						<input type="text" class="form-control" placeholder="width">
   						<div class="input-group-append">
-    						<button class="btn btn-success" type="button">SET</button>
+    						<button class="btn btn-success" type="button" onclick="changeMapSize()">SET</button>
   						</div>
 					</div>
 					<div class="input-group mb-3">
@@ -96,7 +96,8 @@
       			</div>
       			<div class="modal-body">
         			<p style="text-align: center;">RESULT</p>
-					<textarea class="form-control" id="csvResult" disabled></textarea>
+					<textarea class="form-control" id="csvResult1" disabled></textarea>
+					<textarea class="form-control" id="csvResult2" disabled></textarea>
       			</div>
       			<div class="modal-footer">
 					<script>
@@ -108,6 +109,12 @@
 							document.execCommand('copy');
 						}
 					</script>
+					<label class="radio-inline">
+	 				 <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" checked> #1
+					</label>
+					<label class="radio-inline">
+	  					<input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> #2
+					</label>
         			<button type="button" class="btn btn-success" data-dismiss="modal" onclick = "copycsv()">COPY IT!</button>
       			</div>
     		</div>
@@ -129,7 +136,7 @@
 					<textarea class="form-control" id="inputCSV"></textarea>
       			</div>
       			<div class="modal-footer">
-        			<button type="button" class="btn btn-success" data-dismiss="modal">LOAD</button>
+        			<button type="button" class="btn btn-success" data-dismiss="modal" onclick = "loading()">LOAD</button>
 					<button type="button" class="btn btn-secondary" data-dismiss="modal">CANCEL</button>
       			</div>
     		</div>

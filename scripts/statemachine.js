@@ -1,3 +1,34 @@
+function poison(duration, scene)
+{
+	console.log("poison function start!", duration);
+	if(duration > 0)
+	{
+		if(scene.player.body.poison != true)
+		{
+			scene.headerUI.heart.destroy();
+			delete scene.headerUI.heart;
+			scene.headerUI.heart = scene.add.image(10, 10, 'heart');
+			scene.headerUI.heart.setOrigin(0, 0);
+			scene.headerUI.heart.setDepth(6);
+			scene.headerUI.heart.setScrollFactor(0, 0);
+			return;
+			
+		}
+		scene.player.health -= 7;
+		scene.headerUI.heartBar.fillRect(0, 0, scene.player.health-333, 48);
+		setTimeout(function(){poison(duration-1, scene)}, 1000);
+	}
+	else if(duration == 0)
+	{
+		delete scene.player.body.poison;
+		scene.headerUI.heart.destroy();
+		delete scene.headerUI.heart;
+		scene.headerUI.heart = scene.add.image(10, 10, 'heart');
+		scene.headerUI.heart.setOrigin(0, 0);
+		scene.headerUI.heart.setDepth(6);
+		scene.headerUI.heart.setScrollFactor(0, 0);
+	}
+}
 function setHitBoxPosition(hero)
 {
 	var height, width, x, y;
@@ -42,11 +73,66 @@ function healthBarFollowObject(monster)
 	monster.healthbar.gauge.setY(monster.body.y-13);
 }
 
+function checkInTheHitBox(hitBox, monster)
+{
+	var hbTop = hitBox.y;
+	var hbBottom = hitBox.y + hitBox.displayHeight;
+	var hbLeft = hitBox.x;
+	var hbRight = hitBox.x + hitBox.displayWidth;
+	
+	var monsterTop = monster.y;
+	var monsterBottom = monster.y + monster.displayHeight;
+	var monsterLeft = monster.x;
+	var monsterRight = monster.x + monster.displayWidth;
+	
+	if(hbRight >= monsterLeft && hbLeft <= monsterRight && hbTop <= monsterBottom && hbBottom >= monsterTop)
+		return true;
+	return false;
+}
+
+function checkAnomaly(hero, tiles, scene)
+{
+	var heroTop = hero.y;
+	var heroBottom = hero.y + hero.displayHeight;
+	var heroLeft = hero.x;
+	var heroRight = hero.x + hero.displayWidth;
+	for(var i =0; i<tiles.length; i++)
+	{
+		var tileTop = tiles[i].pixelY+64;
+		var tileBottom = tiles[i].pixelY+64 + tiles[i].height;
+		var tileLeft = tiles[i].pixelX;
+		var tileRight = tiles[i].pixelX + tiles[i].width;
+		//console.log("player", heroTop, heroBottom, heroLeft, heroRight);
+		//console.log("tile-"+i.toString(),tileTop, tileBottom, tileLeft, tileRight);
+		if(heroRight >= tileLeft && heroLeft <= tileRight && heroTop <= tileBottom && heroBottom >= tileTop)
+		{
+			if(tiles[i].index == 16)
+			{
+				if(hero.poison != true)
+				{
+					hero.poison = true;
+					scene.headerUI.heart.destroy();
+					delete scene.headerUI.heart;
+					scene.headerUI.heart = scene.add.image(10, 10, 'heart-poison');
+					scene.headerUI.heart.setOrigin(0, 0);
+					scene.headerUI.heart.setDepth(6);
+					scene.headerUI.heart.setScrollFactor(0, 0);
+					poison(25, scene);
+				}
+			}
+			else
+				delete hero.poison;
+			return true;
+		}
+	}
+	return false;
+}
+
 function searchingMonster(scene, HITBOX)
 {
 	for(var i = 0; i<scene.monsterlist.length; i++)
 	{
-		if(scene.physics.world.collide(HITBOX, scene.monsterlist[i].body))
+		if(checkInTheHitBox(HITBOX, scene.monsterlist[i].body))
 		{
 			scene.monsterlist[i].minusHealth();
 			scene.monsterlist[i].healthbar.gauge.fillRect(0, 0, -86*(100+50*(scene.monsterlist[i].status == 2)-scene.monsterlist[i].health)/(100+50*(scene.monsterlist[i].status == 2)), 12);
@@ -99,13 +185,11 @@ class IdleState extends State
 {
     enter(scene, hero)
     {
-		//scene.actingQueue.push(hero);
         hero.body.setVelocity(0);
     }
 	
     execute(scene, hero)
 	{
-		//scene.actingQueue.push(hero);
 		if (scene.keys.A.isDown || scene.keys.D.isDown || scene.keys.W.isDown || scene.keys.S.isDown)
         {
             this.stateMachine.transistion('move');
@@ -116,7 +200,10 @@ class IdleState extends State
             this.stateMachine.transistion('swing');
             return;
         }
-        hero.body.anims.play('idle-'+hero.direction, true);
+		if(hero.body.poison == undefined)
+        	hero.body.anims.play('idle-'+hero.direction, true);
+		else
+			hero.body.anims.play('idle-'+hero.direction+'-poison', true);
     }
 }
 
@@ -124,7 +211,7 @@ class MoveState extends State
 {
     execute(scene, hero)
     {
-		//scene.actingQueue.push(hero);
+		hero.body.setVelocity(0);
 		if(scene.keys.SPACE.isDown)
         {
             this.stateMachine.transistion('swing');
@@ -137,25 +224,34 @@ class MoveState extends State
         }
         if(scene.keys.A.isDown)
         {
-        	hero.body.setX(hero.body.x-0.7);
+        	//hero.body.setX(hero.body.x-0.7);
+			hero.body.setVelocityX(-100);
             hero.direction = "left"
         }
         if(scene.keys.D.isDown)
 		{
-            hero.body.setX(hero.body.x+0.7);
+           // hero.body.setX(hero.body.x+0.7);
+			hero.body.setVelocityX(100);
             hero.direction = "right"
 		}
         if(scene.keys.W.isDown)
         {
-			hero.body.setY(hero.body.y-0.7);
+			//hero.body.setY(hero.body.y-0.7);
+			hero.body.setVelocityY(-100);
 			hero.direction = "up";
         }
         if(scene.keys.S.isDown)
         {
-			hero.body.setY(hero.body.y+0.7);
+			//hero.body.setY(hero.body.y+0.7);
+			hero.body.setVelocityY(100);
             hero.direction = "down";
         }
-       hero.body.anims.play('walking-'+hero.direction, true);
+		if(checkAnomaly(hero.body, scene.anomalyTile, scene))
+			console.log('changed');
+		if(hero.body.poison == true)
+			hero.body.anims.play('walking-'+hero.direction+'-poison', true);
+		else
+    		hero.body.anims.play('walking-'+hero.direction, true);
 	}
 }
 
@@ -167,7 +263,6 @@ class SwingState extends State
 		var collider;
 		var x, y, height, width;
 		hero.body.setVelocityX(0);
-		scene.actingQueue.push(hero);
 		setHitBoxPosition(hero);
 		hero.body.anims.play('attack_'+hero.direction);
 		searchingMonster(scene, hero.HITBOX);
@@ -181,13 +276,11 @@ class MonsterIdleState extends State
 {
 	enter(scene, monster)
 	{
-		//scene.actingQueue.push(monster);
 		monster.body.setVelocity(0, 0);
 		monster.hideHealthbar(true);
 	}
 	execute(scene, monster)
 	{
-		scene.actingQueue.push(monster);
 		if(monster.health <= 0)
 			this.stateMachine.transistion('dead');
 		else if(Phaser.Math.Distance.Between(scene.player.body.x+scene.player.body.width/2, scene.player.body.y+scene.player.body.height/2, monster.body.x+monster.body.width/2, monster.body.y+monster.body.height/2)<=130)
@@ -207,16 +300,15 @@ class MonsterChasingState extends State
 {
 	enter(scene, monster)
 	{
-		//scene.actingQueue.push(monster);
 		monster.hideHealthbar(false);
 	}
 	execute(scene, monster)
 	{
-		//scene.actingQueue.push(monster);
+		monster.body.setVelocity(0, 0);
 		monster.direction = Phaser.Math.Angle.Between(monster.body.x+monster.body.width/2, monster.body.y+monster.body.height/2,scene.player.body.x+scene.player.body.width/2, scene.player.body.y+scene.player.body.height/2);
 		monster.body.anims.play(monster.body.texture.key+'-idle', true);
-		monster.body.setX(monster.body.x+0.3*Math.cos(monster.direction));
-		monster.body.setY(monster.body.y+0.3*Math.sin(monster.direction));
+		monster.body.setVelocityX(15*Math.cos(monster.direction));
+		monster.body.setVelocityY(15*Math.sin(monster.direction));
 		
 		healthBarFollowObject(monster);
 		if(monster.health <= 0)
@@ -242,11 +334,12 @@ class MonsterRunState extends State
 	}
 	execute(scene, monster)
 	{
+		monster.body.setVelocity(0, 0);
 		//scene.actingQueue.push(monster);
 		monster.direction = Phaser.Math.Angle.Between(monster.body.x+monster.body.width/2, monster.body.y+monster.body.height/2,scene.player.body.x+scene.player.body.width/2, scene.player.body.y+scene.player.body.height/2);
 		monster.body.anims.play(monster.body.texture.key+'-idle', true);
-		monster.body.setX(monster.body.x-0.1*Math.cos(monster.direction));
-		monster.body.setY(monster.body.y-0.1*Math.sin(monster.direction));
+		monster.body.setVelocityX(-10*Math.cos(monster.direction));
+		monster.body.setVelocityY(-10*Math.sin(monster.direction));
 		
 		healthBarFollowObject(monster);
 		if(monster.health <= 0)

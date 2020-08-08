@@ -8,7 +8,7 @@ class HeaderUI
 		this.background.setDepth(5);
 		this.background.setScrollFactor(0, 0);
 		
-		this.heart = scene.add.sprite(10, 10, 'heart');
+		this.heart = scene.add.image(10, 10, 'heart');
 		this.heart.setOrigin(0, 0);
 		this.heart.setDepth(6);
 		this.heart.setScrollFactor(0, 0);
@@ -34,6 +34,7 @@ class HealthBar
 	}
 	
 }
+
 
 function createUI(scene)
 {
