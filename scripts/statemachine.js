@@ -203,6 +203,9 @@ class IdleState extends State
 			{
 				scene.once.anims.play('chest-open');
 				scene.once = null;
+				console.log(scene.flamingo);
+				scene.flamingo.destroy();
+				delete scene.flamingo;
 			}
             return;
         }

@@ -94,12 +94,12 @@
 			console.log(obj1.scene.once);
 			if(obj1.scene.once == null)
 			{
-			var flamingo = obj1.scene.physics.add.sprite(obj1.x, obj1.y, 'space-key');
-			flamingo.setOrigin(0,0);
-			flamingo.body.position.set(obj1.x-((obj1.width-flamingo.width)/2), obj1.y+obj1.height);
-			flamingo.anims.play('space-pressed');
+			obj1.scene.flamingo = obj1.scene.physics.add.sprite(obj1.x+(obj1.width-52)/2, obj1.y+obj1.height, 'space-key');
+			obj1.scene.flamingo.setOrigin(0,0);
+			console.log("sex", 	obj1.scene.flamingo);
+			obj1.scene.flamingo.body.position.set(obj1.scene.flamingo.x, obj1.scene.flamingo.y);
+			obj1.scene.flamingo.anims.play('space-pressed');
 			obj1.scene.once = obj2;
-			console.log('stella');
 			}
 		});
         this.keys = this.input.keyboard.addKeys('A, D, W, S, SPACE');
