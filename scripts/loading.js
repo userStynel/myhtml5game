@@ -19,12 +19,14 @@ function loadUIImg(scene)
 	scene.load.image('heart', './assets/UI/hb.png');
 	scene.load.image('monsterhealthbar', './assets/UI/MonsterHealthBar.png');
 	scene.load.image('heart-poison', './assets/UI/hb-poison.png');
-	scene.load.image('dialogBox', './assets/UI/dialogueBox.png');
+    scene.load.image('dialogBox', './assets/UI/dialogueBox.png');
+    scene.load.spritesheet('space-key', './assets/UI/keyboard/SPACE-Key.png',{frameWidth: 52, frameHeight: 16});
 }
 
 function loadMapIMG(scene)
 {
-	scene.load.image('tiles', './assets/tile/tileset.png');
+    scene.load.image('tiles', './assets/tile/tileset.png');
+    scene.load.spritesheet('chest', './assets/chest.png', {frameWidth: 64, frameHeight: 72});
 	scene.load.tilemapTiledJSON('map', './assets/tile/map.json');
 }
 
@@ -213,12 +215,25 @@ function loadAnimation(scene)
         frameRate: 7,
         repeat: -1
         });
-		 scene.anims.create({
+	 scene.anims.create({
         key: 'tank-dead',
         frames: scene.anims.generateFrameNumbers('tank-deadmotion', { start: 0, end:4}),
         frameRate: 5,
         repeat: 0
         });
+    scene.anims.create({
+         key: 'chest-open',
+        frames: scene.anims.generateFrameNumbers('chest', { start: 0, end:2}),
+        frameRate: 5,
+        repeat: 0
+        });
+    scene.anims.create({
+        key: 'space-pressed',
+        frames: scene.anims.generateFrameNumbers('space-key', { start: 0, end:1}),
+        frameRate: 5,
+        repeat: -1
+        });
+    
 }
 
 function loadMap(scene)
@@ -226,7 +241,17 @@ function loadMap(scene)
 	scene.map = scene.make.tilemap({key: 'map'});
 	scene.tileImages = scene.map.addTilesetImage("dungeon", "tiles");
 	scene.worldLayer = scene.map.createStaticLayer('IAM', scene.tileImages, 0, 80);
-	scene.worldLayer.setCollision([1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+    scene.worldLayer.setCollision([1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+    scene.chests = scene.physics.add.staticGroup();
+    const kimoddi = scene.map.getObjectLayer('Chests');
+    for(var i = 0; i<kimoddi.objects.length; i++)
+    {
+        scene.chests.get(kimoddi.objects[i].x, kimoddi.objects[i].y, 'chest');
+        scene.chests.children.entries[i].body.position.set(kimoddi.objects[i].x, kimoddi.objects[i].y);
+        scene.chests.children.entries[i].setOrigin(0, 0);
+    }
+    console.log(scene.chests);
+    
 	scene.anomalyTile = [];
 	for(var i = 0; i<scene.worldLayer.layer.data.length; i++)
 	{
@@ -236,9 +261,6 @@ function loadMap(scene)
 				scene.anomalyTile.push(scene.worldLayer.layer.data[i][j]);
 		}
 	}
-	console.log(scene.anomalyTile);
-	console.log(scene.map.layer);
-	console.log(scene.worldLayer);
 }
 
 function loadNPC(NPClist, scene)
@@ -267,8 +289,7 @@ function loadMonster(Monlist, scene)
 		else
 			texture = 'tank';
 		Monlist.push(new Monster(70*(i+4), 70*(i+4), scene, texture));
-		//scene.physics.add.collider(scene.worldLayer, Monlist[i].body, function(){console.log("monster-a");});
-		//scene.physics.add.collider(scene.player.HITBOX, Monlist[i].body, function(){console.log("yukikiaaaaa");});
+		scene.physics.add.collider(scene.worldLayer, Monlist[i].body);
 		scene.physics.add.collider(scene.player.body, Monlist[i].body, function(object1, object2)
 								   {
 									object1.body.setVelocity(0);

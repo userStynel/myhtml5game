@@ -197,7 +197,13 @@ class IdleState extends State
 		}
         if(scene.keys.SPACE.isDown)
         {
-            this.stateMachine.transistion('swing');
+			if(scene.once == null)
+				this.stateMachine.transistion('swing');
+			else
+			{
+				scene.once.anims.play('chest-open');
+				scene.once = null;
+			}
             return;
         }
 		if(hero.body.poison == undefined)
@@ -214,7 +220,7 @@ class MoveState extends State
 		hero.body.setVelocity(0);
 		if(scene.keys.SPACE.isDown)
         {
-            this.stateMachine.transistion('swing');
+			this.stateMachine.transistion('swing');
             return;
         }
         if(!scene.keys.A.isDown && !scene.keys.D.isDown && !scene.keys.W.isDown && !scene.keys.S.isDown)

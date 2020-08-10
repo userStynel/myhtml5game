@@ -16,7 +16,7 @@
             default: 'arcade',
             arcade: {
                 gravity: {y: 0},
-				//debug: true
+				debug: true
             }
         },
         scene: {
@@ -25,7 +25,6 @@
             update: update
         },
     };
-
     var game = new Phaser.Game(config);
 	
 	class Monster
@@ -84,16 +83,28 @@
 
     function create ()
     {
+		this.once = null;
 		createUI(this);
 		loadAnimation(this);
 		loadMap(this);
 		loadObjects(this);
-		this.physics.add.collider(this.worldLayer, this.player.body, function(){console.log('abcdefg')});
+		this.physics.add.collider(this.worldLayer, this.player.body, function(){console.log('collide with wall')});
+		this.physics.add.collider(this.chests, this.player.body, function(obj1, obj2){
+			console.log('collide with chest', obj2);
+			console.log(obj1.scene.once);
+			if(obj1.scene.once == null)
+			{
+			var flamingo = obj1.scene.physics.add.sprite(obj1.x, obj1.y, 'space-key');
+			flamingo.setOrigin(0,0);
+			flamingo.body.position.set(obj1.x-((obj1.width-flamingo.width)/2), obj1.y+obj1.height);
+			flamingo.anims.play('space-pressed');
+			obj1.scene.once = obj2;
+			console.log('stella');
+			}
+		});
         this.keys = this.input.keyboard.addKeys('A, D, W, S, SPACE');
 		this.cameras.main.setSize(1320, 700);
 		this.cameras.main.startFollow(this.player.body, true);
-		//this.player.body.body.height = 64;
-		//this.player.body.body.width = 64;
     }
 
     function update()
