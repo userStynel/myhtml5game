@@ -27,6 +27,7 @@ function loadMapIMG(scene)
 {
     scene.load.image('tiles', './assets/tile/tileset.png');
     scene.load.spritesheet('chest', './assets/chest.png', {frameWidth: 64, frameHeight: 72});
+    scene.load.spritesheet('coin', './assets/coin.png', {frameWidth: 64, frameHeight: 64});
 	scene.load.tilemapTiledJSON('map', './assets/tile/map.json');
 }
 
@@ -233,6 +234,12 @@ function loadAnimation(scene)
         frameRate: 5,
         repeat: -1
         });
+    scene.anims.create({
+        key: 'coin-spinning',
+        frames: scene.anims.generateFrameNumbers('coin', { start: 0, end:2}),
+        frameRate: 5,
+        repeat: -1
+        });
     
 }
 
@@ -348,5 +355,8 @@ function loadObjects(scene)
 	scene.monsterlist = new Array();
 	loadMonster(scene.monsterlist, scene);
 	scene.NPClist = new Array();
-	loadNPC(scene.NPClist, scene);
+    loadNPC(scene.NPClist, scene);
+    var sex = scene.add.sprite(256, 208, 'coin');
+    sex.setOrigin(0, 0);
+    sex.anims.play('coin-spinning');
 }

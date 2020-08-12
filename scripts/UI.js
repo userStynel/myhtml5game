@@ -12,6 +12,11 @@ class HeaderUI
 		this.heart.setOrigin(0, 0);
 		this.heart.setDepth(6);
 		this.heart.setScrollFactor(0, 0);
+
+		this.coin = scene.add.image(426, 10, 'coin');
+		this.coin.setOrigin(0, 0);
+		this.coin.setDepth(6);
+		this.coin.setScrollFactor(0, 0);
 		
 		
 		this.heartBar = scene.add.graphics({x:406, y:18});
