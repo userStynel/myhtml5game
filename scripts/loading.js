@@ -27,7 +27,7 @@ function loadMapIMG(scene)
 {
     scene.load.image('tiles', './assets/tile/tileset.png');
     scene.load.spritesheet('chest', './assets/chest.png', {frameWidth: 64, frameHeight: 72});
-    scene.load.spritesheet('coin', './assets/coin.png', {frameWidth: 64, frameHeight: 64});
+    scene.load.spritesheet('coin', './assets/Coin.png', {frameWidth: 64, frameHeight: 64});
 	scene.load.tilemapTiledJSON('map', './assets/tile/map.json');
 }
 
