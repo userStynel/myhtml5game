@@ -249,16 +249,11 @@ function loadMap(scene)
 	scene.tileImages = scene.map.addTilesetImage("dungeon", "tiles");
 	scene.worldLayer = scene.map.createStaticLayer('IAM', scene.tileImages, 0, 80);
     scene.worldLayer.setCollision([1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
-    scene.chests = scene.physics.add.staticGroup();
+    scene.chests = scene.physics.add.staticGroup({classType:Chest});
     const kimoddi = scene.map.getObjectLayer('Chests');
     for(var i = 0; i<kimoddi.objects.length; i++)
-    {
-        scene.chests.get(kimoddi.objects[i].x, kimoddi.objects[i].y, 'chest');
-        scene.chests.children.entries[i].body.position.set(kimoddi.objects[i].x, kimoddi.objects[i].y);
-        scene.chests.children.entries[i].setOrigin(0, 0);
-    }
+    	scene.chests.get(kimoddi.objects[i].x, kimoddi.objects[i].y, 'chest');
     console.log(scene.chests);
-    
 	scene.anomalyTile = [];
 	for(var i = 0; i<scene.worldLayer.layer.data.length; i++)
 	{

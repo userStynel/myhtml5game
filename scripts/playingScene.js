@@ -1,3 +1,12 @@
+class Chest extends Phaser.Physics.Arcade.Sprite
+{
+	constructor(scene, x, y, frame)
+	{
+		super(scene, x, y, frame);
+		this.setOrigin(0, 0);
+	}
+}
+
 class Monster
 	{
 		constructor(x, y, scene, texture)
@@ -32,20 +41,21 @@ class Monster
 			}
 		}
 	}
-		
+	/*
 	class Player
 	{
 		constructor(x, y, scene)
 		{
 			this.HITBOX = scene.physics.add.sprite(x, y, null);
 			this.body = scene.physics.add.sprite(x, y, 'mainCharacter', 0);
+			this.body.activeChest = null;
 			this.HITBOX.setOrigin(0, 0);
 			this.HITBOX.setVisible(false);
 			this.body.setOrigin(0, 0);
 			this.health = 333;
 			this.stateMachine = new StateMachine('idle', {idle: new IdleState(), move: new MoveState(), swing: new SwingState()}, [scene, this]); 
 		}
-	}
+	}*/
 
     class PlayingScene extends Phaser.Scene
     {
@@ -68,15 +78,14 @@ class Monster
             this.physics.add.collider(this.chests, this.player.body, function(obj1, obj2){
                 console.log('collide with chest', obj2);
                 console.log(obj1.scene.once);
-                if(obj1.scene.once == null)
-                {
-                obj1.scene.flamingo = obj1.scene.physics.add.sprite(obj1.x+(obj1.width-52)/2, obj1.y+obj1.height, 'space-key');
-                obj1.scene.flamingo.setOrigin(0,0);
-                console.log("sex", 	obj1.scene.flamingo);
-                obj1.scene.flamingo.body.position.set(obj1.scene.flamingo.x, obj1.scene.flamingo.y);
-                obj1.scene.flamingo.anims.play('space-pressed');
-                obj1.scene.once = obj2;
-                }
+				if(obj1.activeChest == null)
+				{
+					obj1.keyboardAlarm = obj1.scene.physics.add.sprite(obj1.x+(obj1.width-52)/2, obj1.y+obj1.height, 'space-key');
+					obj1.keyboardAlarm.setOrigin(0,0);
+					obj1.keyboardAlarm.body.position.set(obj1.keyboardAlarm.x, obj1.keyboardAlarm.y);
+					obj1.keyboardAlarm.anims.play('space-pressed');
+					obj1.activeChest = obj2;
+				}
             });
             this.keys = this.input.keyboard.addKeys('A, D, W, S, SPACE');
             this.cameras.main.setSize(1320, 700);

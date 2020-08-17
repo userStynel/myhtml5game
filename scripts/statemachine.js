@@ -102,8 +102,6 @@ function checkAnomaly(hero, tiles, scene)
 		var tileBottom = tiles[i].pixelY+64 + tiles[i].height;
 		var tileLeft = tiles[i].pixelX;
 		var tileRight = tiles[i].pixelX + tiles[i].width;
-		//console.log("player", heroTop, heroBottom, heroLeft, heroRight);
-		//console.log("tile-"+i.toString(),tileTop, tileBottom, tileLeft, tileRight);
 		if(heroRight >= tileLeft && heroLeft <= tileRight && heroTop <= tileBottom && heroBottom >= tileTop)
 		{
 			if(tiles[i].index == 16)
@@ -197,15 +195,14 @@ class IdleState extends State
 		}
         if(scene.keys.SPACE.isDown)
         {
-			if(scene.once == null)
+			if(hero.body.activeChest == null)
 				this.stateMachine.transistion('swing');
 			else
 			{
-				scene.once.anims.play('chest-open');
-				scene.once = null;
-				console.log(scene.flamingo);
-				scene.flamingo.destroy();
-				delete scene.flamingo;
+				hero.body.activeChest.anims.play('chest-open');
+				hero.body.activeChest = null;
+				hero.body.keyboardAlarm.destroy();
+				delete hero.body.keyboardAlarm;
 			}
             return;
         }
