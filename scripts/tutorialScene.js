@@ -1,6 +1,7 @@
 var isBtnPressed = false;
 var dialogScript = '여기가 어디냐고? 나도 잘 몰라!\n일단 묻지말고 포탄을 피해 우측 상단으로가서 버튼을 눌러봐! 그럼 내가 있는 문이 열릴거야\nGod Bless you!\n';
 var healthTellerScript;
+
 class Player
 {
 	constructor(scene, x, y, texture)
@@ -62,6 +63,7 @@ function touchButton(scene)
 		return true;
 	return false;
 }
+
 function shooting(scene)
 {
 	var sceneSave = scene;
@@ -104,42 +106,52 @@ class tutorialScene extends Phaser.Scene
 		this.load.spritesheet('cannonBall-fly', './assets/cannonBall-fly.png', { frameWidth: 32, frameHeight: 32});
 		this.load.spritesheet('cannonBall-explode', './assets/cannonBall-explode.png', { frameWidth: 32, frameHeight: 32});
 		this.load.spritesheet('button', './assets/button.png', { frameWidth: 64, frameHeight: 64});
+		this.load.spritesheet('brick', './assets/brick.png', { frameWidth: 64, frameHeight: 64});
 	}
 	create()
 	{
 		this.keys = this.input.keyboard.addKeys('A, D, W, S, SPACE');
 		this.cannonBall = this.physics.add.group({classType:CannonBall});
+		
 		this.anims.create({
-        key: 'cannonBall-fly',
+        key: 'cannonBall-fly', // 캐논볼이 날아가는 애니메이션
         frames: this.anims.generateFrameNumbers('cannonBall-fly', { start: 0, end: 1}),
         frameRate: 3,
         repeat: -1
         });
 		this.anims.create({
-        key: 'cannonBall-explode',
+        key: 'cannonBall-explode', // 캐논볼이 터지는 애니메이션
         frames: this.anims.generateFrameNumbers('cannonBall-explode', { start: 0, end: 2}),
         frameRate: 11,
         repeat: 0
         });
 		this.anims.create({
-        key: 'wasdInfo-anime',
+        key: 'wasdInfo-anime', // 캐릭터 아래에 w,a,s,d 키가 이동임을 알려주는 애니메이션
         frames: this.anims.generateFrameNumbers('wasdInfo', { start: 0, end: 4}),
         frameRate: 5,
         repeat: -1
         });
 		this.anims.create({
-        key: 'spaceInfo-anime',
+        key: 'spaceInfo-anime', // 캐릭터 아래에 스페이스키가 상호작용임을 알려주는 애니메이션
         frames: this.anims.generateFrameNumbers('spaceInfo', { start: 0, end: 1}),
         frameRate: 5,
         repeat: -1
         });
 		this.anims.create({
-        key: 'button-pushing',
+        key: 'button-pushing', // 버튼이 눌리는 애니메이션
         frames: this.anims.generateFrameNumbers('button', { start: 0, end: 4}),
         frameRate: 3,
         repeat: 0
         });
+		this.anims.create({
+        key: 'brick-demolishing', // 벽이 부숴지는 애니메이션
+        frames: this.anims.generateFrameNumbers('brick', { start: 0, end: 1}),
+        frameRate: 3,
+        repeat: 0
+        });
+		
 		shooting(this);
+		
 		this.map = this.make.tilemap({key:'tutorialMap', tileWidth:64, tileHeight:64});
 		const tiles = this.map.addTilesetImage('tiles');
 		const layer = this.map.createStaticLayer(0, tiles, 0, 80);
@@ -190,7 +202,9 @@ class tutorialScene extends Phaser.Scene
 		this.button = this.add.sprite(576, 192+80, 'button');
 		this.button.setOrigin(0, 0);
 		
-		this.map.layer.data[4][10].index = 3;
+		this.brick = this.physics.add.sprite(64*10, 64*4+80, 'brick');
+		this.brick.setOrigin(0, 0);
+		this.brickCollider = this.physics.add.collider(this.brick, this.player.object, function(obj1, obj2){obj1.setVelocity(0, 0);});
 	}
 	update()
 	{
@@ -225,8 +239,8 @@ class tutorialScene extends Phaser.Scene
 					{
 						cbNode[i].explode();
 					}
-					scene.map.layer.data[4][10].index = 22;
-					console.log(scene.map.layer.data[4][10].index);
+					scene.brick.anims.play('brick-demolishing');
+					scene.brickCollider.destroy();
 					scene.text.setText("아주 잘했어! 오른쪽으로 가봐!\n[ -- 아직 미완성 -- ]");});
 			}
 		}
