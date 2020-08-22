@@ -132,7 +132,7 @@ function drawingRECT(sx, sy, dx, dy) // 드래그 한 영역만큼 타일을 채
 	}
 }
 
-function converting(numGaro, numSero) // 맵을 csv 형식으로 변환함
+function converting() // 맵을 csv 형식으로 변환함
 {
 	var ans = document.getElementById("csvResult1");
 	var ans2 = document.getElementById("csvResult2");
@@ -329,6 +329,42 @@ function changeMapSize()
 			lines[y].parentNode.removeChild(lines[y]);
 	}
 	
+	else if(width>=numGaro && height<numSero)
+	{
+		for(y=0;y<height; y++)
+		{
+			for(x=numGaro; x<width; x++)
+			{
+				addCell(x, y, lines[y]);
+			}
+		}
+		for(y=height; y<numSero; y++)
+			lines[y].parentNode.removeChild(lines[y]);
+	}
+	
+	else if(width<numGaro && height >= numSero)
+	{
+		console.log("woowee");
+		for(y=0; y<numSero; y++)
+		{
+			for(x=width; x<numGaro; x++)
+			{
+				var cell = document.getElementById('cell-'+x.toString()+'-'+y.toString());
+				cell.parentNode.removeChild(cell);
+			}
+		}
+		for(y=numSero; y<height; y++)
+		{	
+			var line = document.createElement("div");
+			line.setAttribute('class', 'line');
+			document.getElementById('map').appendChild(line);
+			for(var x = 0; x<width; x++)
+			{
+				addCell(x, y, line);			
+			}
+		}
+	}
+	
 	$('.cells').css({
 		"background-color": "white",
 		"width": sizeWidth.toString()+"px",
@@ -337,5 +373,5 @@ function changeMapSize()
 		});
 	
 	numGaro = width;
-	numSero = height;	
+	numSero = height;
 }

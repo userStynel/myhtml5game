@@ -1,12 +1,20 @@
 var isBtnPressed = false;
 var dialogScript = '여기가 어디냐고? 나도 잘 몰라!\n일단 묻지말고 포탄을 피해 우측 상단으로가서 버튼을 눌러봐! 그럼 내가 있는 문이 열릴거야\nGod Bless you!\n';
 var healthTellerScript;
+var nowPhase = 1;
+
+function getCoord(pos)
+{
+	var ret = new Array(pos[0]*64, pos[1]*64+80);
+	return ret;
+}
 
 class Player
 {
-	constructor(scene, x, y, texture)
+	constructor(scene, pos, texture)
 	{
-		this.object = scene.physics.add.sprite(x, y, texture);
+		alert(pos[0]); 
+		this.object = scene.physics.add.sprite(pos[0], pos[1], texture);
 		this.object.setOrigin(0, 0);
 		this.object.speed = 75;
 		this.object.health = 100;
@@ -47,20 +55,31 @@ class CannonBall extends Phaser.Physics.Arcade.Sprite
 	}
 }
 
-function touchButton(scene)
+function isCollide(scene, name)
 {
 	var playerLeft = scene.player.object.x;
 	var playerRight = scene.player.object.x+scene.player.object.width;
 	var playerTop = scene.player.object.y;
 	var playerBottom = scene.player.object.y+scene.player.object.height;
 	
-	var buttonLeft = 576;
-	var buttonRight = 576+64;
-	var buttonTop = 192+80;
-	var buttonBottom = 256+80;
-	
-	if(playerRight >= buttonLeft && playerLeft <= buttonRight && playerBottom >= buttonTop && playerTop <= buttonBottom)
-		return true;
+	var objectLeft, objectRight, objectTop, objectBottom;
+	switch(name)
+	{
+		case 'button':
+			objectLeft = 576;
+			objectRight = 576+64;
+			objectTop = 192+80;
+			objectBottom = 256+80;
+			break;
+		case 'nextlevel':
+			objectLeft = 64*12;
+			objectRight = 64*13;
+			objectTop = 64*4+80;
+			objectBottom = 64*5+80;
+			break;
+	}
+	if(playerRight >= objectLeft && playerLeft <= objectRight && playerBottom >= objectTop && playerTop <= objectBottom)
+			return true;
 	return false;
 }
 
@@ -73,18 +92,20 @@ function shooting(scene)
 		setTimeout(function(){
 			var isPicked = new Array(0, 0, 0, 0, 0, 0, 0, 0, 0);
 			var numCannon = Math.floor(Math.random()*7)+1;
-			console.log('numCannon', numCannon);
+			var logMessage;
+			console.log('Event: numCannon', numCannon);
 			for(var i = 0; i<numCannon; i++)
 			{
 				var pick;
-				pick = Math.floor(Math.random()*9); 
-				console.log(pick);
+				pick = Math.floor(Math.random()*9);
+				logMessage += pick.toString() + " ";
 				isPicked[pick] = 1;
 				cannonballSave = sceneSave.cannonBall.get(64*(pick+1)+32, 128+32+80, 'cannonBall-fly'); 
 				cannonballSave.flying();
 			}
+			console.log("Picked: "+ logMessage);
 			shooting(sceneSave);  
-		}, 700);
+		}, 1200);
 	}
 }
 
@@ -163,7 +184,10 @@ class tutorialScene extends Phaser.Scene
 		header.setScrollFactor(0, 0);
 		layer.setCollision([0, 1, 4, 7, 11]);
 		
-		this.player = new Player(this, 64*1, 64*14+80, 'mainCharacter');
+		this.button = this.add.sprite(576, 192+80, 'button');
+		this.button.setOrigin(0, 0);
+		
+		this.player = new Player(this, getCoord(new Array(1, 14)), 'mainCharacter');
 		
 		const tutorialChar = this.add.image(5, 5, 'tutorialCharacter');
 		tutorialChar.setOrigin(0, 0);
@@ -174,8 +198,7 @@ class tutorialScene extends Phaser.Scene
 		this.text = this.add.text(105, 5, dialogScript + healthTellerScript);
 		this.text.setDepth(7);
 		this.text.setScrollFactor(0, 0);
-		
-		this.physics.add.collider(this.player.object, layer);
+		this.physics.add.collider(this.player.object, layer, function(){console.log("Player-Wall Collding!");});
 		this.physics.add.collider(this.player.object, this.cannonBall, function(obj1, obj2){
 			obj2.explode();
 			if(!obj1.isInvicible)
@@ -189,22 +212,22 @@ class tutorialScene extends Phaser.Scene
 				obj1.scene.text.setText(dialogScript + healthTellerScript);
 			}
 		});
-		this.physics.add.collider(layer, this.cannonBall, function(obj1, obj2){
+		
+		this.trapcollider = this.physics.add.collider(layer, this.cannonBall, function(obj1, obj2){
 			obj1.explode();
 		});
 		
-		this.alarm = this.add.sprite(0, 0, 'wasdInfo');
-		this.alarm.anims.play(this.alarm.texture.key+'-anime');
+		this.guideIMG = this.add.sprite(0, 0, 'wasdInfo');
+		this.guideIMG.anims.play(this.guideIMG.texture.key+'-anime');
 		
 		this.cameras.main.setSize(892, 892);
         this.cameras.main.startFollow(this.player.object, true);
 		
-		this.button = this.add.sprite(576, 192+80, 'button');
-		this.button.setOrigin(0, 0);
 		
 		this.brick = this.physics.add.sprite(64*10, 64*4+80, 'brick');
 		this.brick.setOrigin(0, 0);
-		this.brickCollider = this.physics.add.collider(this.brick, this.player.object, function(obj1, obj2){obj1.setVelocity(0, 0);});
+		this.brick.setImmovable(true);
+		this.brickCollider = this.physics.add.collider(this.brick, this.player.object);
 	}
 	update()
 	{
@@ -217,40 +240,54 @@ class tutorialScene extends Phaser.Scene
 			this.player.object.setVelocityX(-this.player.object.speed);
 		if(this.keys.D.isDown)
 			this.player.object.setVelocityX(this.player.object.speed);
-		if(!isBtnPressed)
-			this.alarm.setPosition(this.player.object.x+32, this.player.object.y+74+this.alarm.height/2);
-		if(!isBtnPressed && touchButton(this))
+		if(nowPhase == 1)
 		{
-			if(this.alarm.texture.key != 'spaceInfo')
+			if(!isBtnPressed)
+				this.guideIMG.setPosition(this.player.object.x+32, this.player.object.y+74+this.guideIMG.height/2);
+			else if(isCollide(this, 'nextlevel'))
 			{
-				this.alarm.setTexture('spaceInfo');
-				this.alarm.anims.play(this.alarm.texture.key+'-anime');
+				dialogScript = "안녕!? 내 방에 온걸 환영해 ㅎㅎ\n";
+				this.text.setText(dialogScript);
+				this.brick.setTexture('brick');
+				this.brickCollider = this.physics.add.collider(this.brick, this.player.object);
+				nowPhase = 2;
 			}
-			if(this.keys.SPACE.isDown)
+			if(!isBtnPressed && isCollide(this, 'button'))
 			{
-				var scene = this;
-				var cbNode = this.cannonBall.children.entries;
-				this.alarm.destroy();
-				isBtnPressed = true;
-				this.button.anims.play('button-pushing');
-				this.button.on('animationcomplete', function(){
-					console.log(cbNode);
-					for(var i=0; i<cbNode.length; i++)
-					{
-						cbNode[i].explode();
-					}
-					scene.brick.anims.play('brick-demolishing');
-					scene.brickCollider.destroy();
-					scene.text.setText("아주 잘했어! 오른쪽으로 가봐!\n[ -- 아직 미완성 -- ]");});
+				if(this.guideIMG.texture.key != 'spaceInfo')
+				{
+					this.guideIMG.setTexture('spaceInfo');
+					this.guideIMG.anims.play(this.guideIMG.texture.key+'-anime');
+				}
+				if(this.keys.SPACE.isDown)
+				{
+					var scene = this;
+					var cbNode = this.cannonBall.children.entries;
+					this.guideIMG.setVisible(false);
+					isBtnPressed = true;
+					this.button.anims.play('button-pushing');
+					this.button.on('animationcomplete', function(){
+						for(var i=0; i<cbNode.length; i++)
+						{
+							cbNode[i].explode();
+						}
+						scene.brick.anims.play('brick-demolishing');
+						scene.brickCollider.destroy();
+						scene.text.setText("아주 잘했어! 오른쪽으로 가봐!");});
+				}
+			}
+			else if(!isBtnPressed)
+			{
+				if(this.guideIMG.texture.key != 'wasdInfo')
+				{
+					this.guideIMG.setTexture('wasdInfo');
+					this.guideIMG.anims.play(this.guideIMG.texture.key+'-anime');
+				}
 			}
 		}
-		else if(!isBtnPressed)
+		else if(nowPhase == 2)
 		{
-			if(this.alarm.texture.key != 'wasdInfo')
-			{
-				this.alarm.setTexture('wasdInfo');
-				this.alarm.anims.play(this.alarm.texture.key+'-anime');
-			}
+			
 		}
 	}
 }
